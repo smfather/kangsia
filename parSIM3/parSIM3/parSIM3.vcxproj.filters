@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\CUDA">
+      <UniqueIdentifier>{cea99bcd-8f0e-4237-acea-7ae328aed740}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\MBD">
+      <UniqueIdentifier>{6df47985-04f1-4bde-ad86-69a094fd88e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\CUDA">
+      <UniqueIdentifier>{e8989b18-7252-40dc-9c86-ab87050de035}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\MBD">
+      <UniqueIdentifier>{f07c7a7b-cbe3-44fa-bf31-56bdadab0a20}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="..\..\common\source\cu_dem_def.cu">
+      <Filter>소스 파일\CUDA</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\common\source\cell_grid.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\CouplingSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\dem_force.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\Demsimulation.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\file_system.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\force.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\Euler_integrator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\geometry.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\HHT_integrator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\Integrator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\Log.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\particles.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\Simulation.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\Verlet_integrator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\writer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\MBD\appliedForceElement.cpp">
+      <Filter>소스 파일\MBD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\MBD\constraintCalculator.cpp">
+      <Filter>소스 파일\MBD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\MBD\driving_constraint.cpp">
+      <Filter>소스 파일\MBD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\MBD\forceCalculator.cpp">
+      <Filter>소스 파일\MBD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\MBD\kinematic_constraint.cpp">
+      <Filter>소스 파일\MBD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\MBD\massCalculator.cpp">
+      <Filter>소스 파일\MBD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\MBD\Mbdsimulation.cpp">
+      <Filter>소스 파일\MBD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\MBD\pointmass.cpp">
+      <Filter>소스 파일\MBD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\MBD\rigid_body.cpp">
+      <Filter>소스 파일\MBD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\utility\parabola_predictor.cpp">
+      <Filter>소스 파일\MBD</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\common\inc\algebra.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\cell_grid.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\checkErrors.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\CouplingSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\cu_dem_dec.cuh">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\Demsimulation.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\Euler_integrator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\file_system.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\force.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\geometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\HHT_integrator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\Integrator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\loader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\Log.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\mbd_force1.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\parSIM.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\particles.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\Simulation.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\timer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\types.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\Verlet_integrator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\writer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\MBD\appliedForceElement.h">
+      <Filter>헤더 파일\MBD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\MBD\constraintCalculator.h">
+      <Filter>헤더 파일\MBD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\MBD\driving_constraint.h">
+      <Filter>헤더 파일\MBD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\MBD\forceCalculator.h">
+      <Filter>헤더 파일\MBD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\MBD\kinematic_constraint.h">
+      <Filter>헤더 파일\MBD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\MBD\massCalculator.h">
+      <Filter>헤더 파일\MBD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\MBD\Mbdsimulation.h">
+      <Filter>헤더 파일\MBD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\MBD\pointmass.h">
+      <Filter>헤더 파일\MBD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\MBD\rigid_body.h">
+      <Filter>헤더 파일\MBD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\utility\parabola_predictor.h">
+      <Filter>헤더 파일\MBD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\algebra\euler_parameter.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\cu_dem_impl.cuh">
+      <Filter>헤더 파일\CUDA</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
