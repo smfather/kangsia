@@ -19,6 +19,8 @@ using namespace algebra;
 
 QT_BEGIN_NAMESPACE
 class QLineEdit;
+class QComboBox;
+class QLabel;
 QT_END_NAMESPACE
 
 #define MAX_FRAME	2000
@@ -43,7 +45,8 @@ namespace parview
 		//Object(std::map<QString, Object*> *_objs);
 		virtual ~Object() 
 		{ 
-			count--;  
+			count--; 
+			//if (CBMaterial) delete CBMaterial; CBMaterial = NULL;
 		}
 		virtual void callDialog() = 0;
 		virtual void draw() = 0;
@@ -60,6 +63,8 @@ namespace parview
 
 	protected:
 		geometry_type type;
+		material_type mtype;
+		cmaterialType material;
 		virtual void define(void* tg = 0) = 0;
 		void colorRamp(float t, float *r);
 		float lerp(float a, float b, float t){ return a + t*(b - a); }
@@ -70,6 +75,8 @@ namespace parview
 		mass* ms;
 		bool isDefined;
 		static std::map<QString, parview::Object*> *objs;
+		QLabel *LMaterial;
+	    QComboBox *CBMaterial;
 
 	private:
 		static int count;

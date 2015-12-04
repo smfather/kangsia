@@ -186,15 +186,15 @@ void particles::define(void* tg)
 				p = vector3<double>(c->minPoint[0] + radius + (dim3np.x - 1) * spacing
 					, c->minPoint[1] + radius + (dim3np.y - 1) * spacing
 					, c->minPoint[2] + radius + (dim3np.z - 1) * spacing);
-				if (p.x + radius > c->width && dim3np.x > 1){
+				if (p.x + radius > (c->minPoint[0]+c->width) && dim3np.x > 1){
 					dim3np.x--;
 					bcond = true;
 				}
-				if (p.y + radius > c->height && dim3np.y > 1){
+				if (p.y + radius > (c->minPoint[1]+c->height) && dim3np.y > 1){
 					dim3np.y--;
 					bcond = true;
 				}
-				if (p.z + radius > c->depth && dim3np.z > 1){
+				if (p.z + radius > (c->minPoint[2]+c->depth) && dim3np.z > 1){
 					dim3np.z--;
 					bcond = true;
 				}
@@ -737,6 +737,8 @@ void particles::callDialog()
 		CBGeometry = new QComboBox;
 		LName = new QLabel("Name");
 		LEName = new QLineEdit;
+		LEName->setText("particles");
+		LEName->setReadOnly(true);
 		LRadius = new QLabel("Radius");
 		LERadius = new QLineEdit;
 // 		LStartPoint = new QLabel("Start point");
@@ -749,14 +751,16 @@ void particles::callDialog()
 		connect(PBOk, SIGNAL(clicked()), this, SLOT(Click_ok()));
 		connect(PBCancel, SIGNAL(clicked()), this, SLOT(Click_cancel()));
 		CBGeometry->addItems(geoComboxList);
-		particleLayout->addWidget(LBaseGeometry, 0, 0);
-		particleLayout->addWidget(CBGeometry, 0, 1, 1, 2);
-		particleLayout->addWidget(LName, 1, 0);
-		particleLayout->addWidget(LEName, 1, 1, 1, 2);
-		particleLayout->addWidget(LRadius, 2, 0);
-		particleLayout->addWidget(LERadius, 2, 1, 1, 2);
-		particleLayout->addWidget(PBOk, 3, 0);
-		particleLayout->addWidget(PBCancel, 3, 1);
+		particleLayout->addWidget(LMaterial, 0, 0);
+		particleLayout->addWidget(CBMaterial, 0, 1, 1, 2);
+		particleLayout->addWidget(LBaseGeometry, 1, 0);
+		particleLayout->addWidget(CBGeometry, 1, 1, 1, 2);
+		particleLayout->addWidget(LName, 2, 0);
+		particleLayout->addWidget(LEName, 2, 1, 1, 2);
+		particleLayout->addWidget(LRadius, 3, 0);
+		particleLayout->addWidget(LERadius, 3, 1, 1, 2);
+		particleLayout->addWidget(PBOk, 4, 0);
+		particleLayout->addWidget(PBCancel, 4, 1);
 // 		particleLayout->addWidget(LStartPoint, 3, 0);
 // 		particleLayout->addWidget(LEStartPoint, 3, 1, 1, 2);
 // 		particleLayout->addWidget(LEndPoint, 4, 0);
@@ -794,6 +798,8 @@ void particles::Click_ok()
 	baseGeometry = CBGeometry->currentText();
 
 	Object::name = LEName->text();
+	Object::mtype = material_str2enum(CBMaterial->currentText().toStdString());
+	Object::material = getMaterialConstant(mtype);
 
 	radius = LERadius->text().toFloat();
 

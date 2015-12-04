@@ -99,14 +99,16 @@ void cube::callDialog()
 		PBCancel = new QPushButton("Cancel");
 		connect(PBOk, SIGNAL(clicked()), this, SLOT(Click_ok()));
 		connect(PBCancel, SIGNAL(clicked()), this, SLOT(Click_cancel()));
-		cubeLayout->addWidget(LName, 0, 0);
-		cubeLayout->addWidget(LEName, 0, 1, 1, 2);
-		cubeLayout->addWidget(LStartPoint, 1, 0);
-		cubeLayout->addWidget(LEStartPoint, 1, 1, 1, 2);
-		cubeLayout->addWidget(LEndPoint, 2, 0);
-		cubeLayout->addWidget(LEEndPoint, 2, 1, 1, 2);
-		cubeLayout->addWidget(PBOk, 3, 0);
-		cubeLayout->addWidget(PBCancel, 3, 1);
+		cubeLayout->addWidget(LMaterial, 0, 0);
+		cubeLayout->addWidget(CBMaterial, 0, 1, 1, 2);
+		cubeLayout->addWidget(LName, 1, 0);
+		cubeLayout->addWidget(LEName, 1, 1, 1, 2);
+		cubeLayout->addWidget(LStartPoint, 2, 0);
+		cubeLayout->addWidget(LEStartPoint, 2, 1, 1, 2);
+		cubeLayout->addWidget(LEndPoint, 3, 0);
+		cubeLayout->addWidget(LEEndPoint, 3, 1, 1, 2);
+		cubeLayout->addWidget(PBOk, 4, 0);
+		cubeLayout->addWidget(PBCancel, 4, 1);
 		cubeDialog->setLayout(cubeLayout);
 	}
 	LEName->text().clear();
@@ -137,6 +139,8 @@ void cube::Click_ok()
 	}
 
 	Object::name = LEName->text();
+	mtype = material_str2enum(CBMaterial->currentText().toStdString());
+	material = getMaterialConstant(mtype);
 
 	QStringList chList = LEStartPoint->text().split(" ");
 	minPoint[0] = chList.at(0).toFloat();

@@ -20,20 +20,19 @@ void line::setLineData(QFile& pf)
 	pf.read((char*)&name_size, sizeof(int));
 	pf.read((char*)nm, sizeof(char)*name_size);
 	name.sprintf("%s", nm);
-	vector3<double> sp;
-	vector3<double> ep;
+	double sp[3];
+	double ep[3];
 
-	pf.read((char*)&sp, sizeof(vector3<double>));
-	pf.read((char*)&ep, sizeof(vector3<double>));
+	pf.read((char*)&sp, sizeof(double)*3);
+	pf.read((char*)&ep, sizeof(double)*3);
 
-	startPoint = vector3<float>(
-		static_cast<float>(sp.x),
-		static_cast<float>(sp.y),
-		static_cast<float>(sp.z));
-	endPoint = vector3<float>(
-		static_cast<float>(ep.x),
-		static_cast<float>(ep.y),
-		static_cast<float>(ep.z));
+	startPoint[0] = static_cast<float>(sp[0]);
+	startPoint[1] = static_cast<float>(sp[1]);
+	startPoint[2] = static_cast<float>(sp[2]);
+
+	endPoint[0] = static_cast<float>(ep[0]);
+	endPoint[1] = static_cast<float>(ep[1]);
+	endPoint[2] = static_cast<float>(ep[2]);
 }
 
 void line::draw()
@@ -55,8 +54,8 @@ void line::define(void* tg)
 
 	glBegin(GL_LINES);
 	{
-		glVertex3f(startPoint.x, startPoint.y, startPoint.z);
-		glVertex3f(endPoint.x, endPoint.y, endPoint.z);
+		glVertex3f(startPoint[0], startPoint[1], startPoint[2]);
+		glVertex3f(endPoint[0], endPoint[1], endPoint[2]);
 	}
 	glEnd();
 	glEndList();

@@ -3,6 +3,9 @@
 #include <QStringList>
 #include <QLineEdit>
 #include <QMessageBox>
+#include <QComboBox>
+#include <QLabel>
+
 
 using namespace parview;
 
@@ -11,6 +14,7 @@ std::map<QString, parview::Object*> *Object::objs = NULL;
 
 Object::Object(geometry_type gt)
 	: ms(NULL)
+	, CBMaterial(NULL)
 	, type(gt)
 	, isDefined(false)
 {
@@ -19,6 +23,12 @@ Object::Object(geometry_type gt)
 	color[1] = colors[count * 4 + 1];
 	color[2] = colors[count * 4 + 2];
 	color[3] = colors[count * 4 + 3];
+
+	if (!CBMaterial){
+		LMaterial = new QLabel("Material");
+		CBMaterial = new QComboBox;
+		CBMaterial->addItems(getMaterialList());
+	}
 }
 
 // Object::Object(std::map<QString, Object*> *_objs)

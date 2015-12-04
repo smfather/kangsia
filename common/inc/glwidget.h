@@ -64,6 +64,7 @@ namespace parview
 		void AddParticles(QString& fname);
 		void AddBondData(QString& fname);
 		void ChangeDisplayOption(int oid);
+		std::map<QString, Object*>& Objects() { return objs; }
 
 		public slots:
 		void setXRotation(int angle);

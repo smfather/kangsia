@@ -12,5 +12,6 @@
         <file>image/open_rt.png</file>
         <file>image/pRec.png</file>
         <file>image/particle.png</file>
+        <file>image/solve.png</file>
     </qresource>
 </RCC>

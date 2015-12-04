@@ -1,6 +1,7 @@
 #include "parview.h"
 #include "view_particles.h"
 #include "view_controller.h"
+#include "solveDialog.h"
 #include <QtWidgets>
 #include <QFileDialog.h>
 
@@ -44,6 +45,10 @@ parVIEW::parVIEW(QWidget *parent)
 	makeParticleAct->setStatusTip(tr("Create particles"));
 	connect(makeParticleAct, SIGNAL(triggered()), this, SLOT(makeParticle()));
 
+	solveProcessAct = new QAction(QIcon(":/image/solve.png"), tr("&Solve the model"), this);
+	solveProcessAct->setStatusTip(tr("Solve the model"));
+	connect(solveProcessAct, SIGNAL(triggered()), this, SLOT(solveProcess()));
+
 	//enuChangeShapeAct = new QAction(tr("&Change shape"), this);
 	connect(ui.actionChange_Shape, SIGNAL(triggered()), this, SLOT(ChangeShape()));
 
@@ -54,6 +59,7 @@ parVIEW::parVIEW(QWidget *parent)
 	ui.mainToolBar->addAction(pinfoAct);
 	ui.mainToolBar->addAction(makeCubeAct);
 	ui.mainToolBar->addAction(makeParticleAct);
+	ui.mainToolBar->addAction(solveProcessAct);
 
 	viewObjectComboBox = new QComboBox;
 	viewObjectComboBox->insertItem(0, "All display");
@@ -338,4 +344,11 @@ void parVIEW::makeCube()
 void parVIEW::makeParticle()
 {
 	gl->makeParticle();
+}
+
+void parVIEW::solveProcess()
+{
+	solveDialog solDlg(gl);
+	solDlg.callDialog();
+
 }

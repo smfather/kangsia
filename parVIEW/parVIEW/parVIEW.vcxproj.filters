@@ -33,6 +33,12 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Header Files\Simulation">
+      <UniqueIdentifier>{251c6126-fe45-4585-8c69-cb6d2b44fb29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Simulation">
+      <UniqueIdentifier>{f25bd46f-ed98-47fa-8dc6-8e36128bbbee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_parview.cpp">
@@ -122,6 +128,24 @@
     <ClCompile Include="GeneratedFiles\Release\moc_view_particles.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\source\solveDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_solveDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_solveDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\DEM\DemSimulation.cpp">
+      <Filter>Source Files\Simulation</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_DemSimulation.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_DemSimulation.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\common\resource\parview.ui">
@@ -147,6 +171,15 @@
     </CustomBuild>
     <CustomBuild Include="..\..\common\inc\view_cube.h">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\common\inc\solveDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\common\inc\BaseSimulation.hpp">
+      <Filter>Header Files\Simulation</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\common\inc\DEM\DemSimulation.h">
+      <Filter>Header Files\Simulation</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -183,7 +216,7 @@
     <ClInclude Include="..\..\common\inc\view_bondData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="materialLibrary.h">
+    <ClInclude Include="..\..\common\inc\materialLibrary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

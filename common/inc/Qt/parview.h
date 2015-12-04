@@ -35,6 +35,7 @@ namespace parview
 		void ani_scrollbar();
 		void makeCube();
 		void makeParticle();
+		void solveProcess();
 
 		void openPinfoDialog();
 
@@ -60,6 +61,7 @@ namespace parview
 		QAction *aniForwardAct2;
 		QAction *makeCubeAct;
 		QAction *makeParticleAct;
+		QAction *solveProcessAct;
 
 		QAction *pinfoAct;
 

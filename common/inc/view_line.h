@@ -18,8 +18,8 @@ namespace parview
 		virtual void define(void* tg = 0);
 		virtual void saveCurrentData(QFile& pf);
 		virtual void updateDataFromFile(QFile& pf){}
-		vector3<float> startPoint;
-		vector3<float> endPoint;
+		float startPoint[3];
+		float endPoint[3];
 
 		unsigned int glList;
 	};

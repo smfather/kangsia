@@ -2,6 +2,7 @@
 #define TYPES_H
 
 #include <string>
+#include "materialLibrary.h"
 
 #define NUM_INTEGRATOR 3
 
@@ -83,44 +84,44 @@ struct dependency_type
 	T value;
 };
 
-enum material_type
-{
-	NO_MATERIAL = 0,
-	STEEL=1,
-	ACRYLIC=2,
-	POLYETHYLENE=3,
-	POLYSTYRENE=4,
-	ROCK=5,
-	MEDIUM_CLAY=6
-};
-
-#define STEEL_YOUNGS_MODULUS 2e+011
-#define STEEL_DENSITY 7850
-#define STEEL_POISSON_RATIO 0.3
-
-#define IRON_YOUNGS_MODULUS 1.1E+011
-#define IRON_DENSITY		7200
-#define IRON_POISSON_RATIO	0.28
-
-#define MEDIUM_CLAY_YOUNGS_MODULUS 35E+06
-#define MEDIUM_CLAY_DENSITY 1900
-#define MEDIUM_CLAY_POISSON_RATIO 0.45
-
-#define POLYETHYLENE_YOUNGS_MODULUS 0.2E+009
-#define POLYETHYLENE_DENSITY		1768
-#define POLYETHYLENE_POISSON_RATIO	0.46	
-
-#define POLYSTYRENE_YOUNGS_MODULUS 3.25E+009
-#define POLYSTYRENE_DENSITY		   1050
-#define POLYSTYRENE_POISSON_RATIO  0.34	
-
-#define GLASS_YOUNG_MODULUS	6.8e+10
-#define GLASS_DENSITY		2180
-#define GLASS_POISSON_RATIO	0.19
-
-#define ACRYLIC_YOUNG_MODULUS 3.2E+009
-#define ACRYLIC_DENSITY			1185
-#define ACRYLIC_POISSON_RATIO	0.37
+// enum material_type
+// {
+// 	NO_MATERIAL = 0,
+// 	STEEL=1,
+// 	ACRYLIC=2,
+// 	POLYETHYLENE=3,
+// 	POLYSTYRENE=4,
+// 	ROCK=5,
+// 	MEDIUM_CLAY=6
+// };
+// 
+// #define STEEL_YOUNGS_MODULUS 2e+011
+// #define STEEL_DENSITY 7850
+// #define STEEL_POISSON_RATIO 0.3
+// 
+// #define IRON_YOUNGS_MODULUS 1.1E+011
+// #define IRON_DENSITY		7200
+// #define IRON_POISSON_RATIO	0.28
+// 
+// #define MEDIUM_CLAY_YOUNGS_MODULUS 35E+06
+// #define MEDIUM_CLAY_DENSITY 1900
+// #define MEDIUM_CLAY_POISSON_RATIO 0.45
+// 
+// #define POLYETHYLENE_YOUNGS_MODULUS 0.2E+009
+// #define POLYETHYLENE_DENSITY		1768
+// #define POLYETHYLENE_POISSON_RATIO	0.46	
+// 
+// #define POLYSTYRENE_YOUNGS_MODULUS 3.25E+009
+// #define POLYSTYRENE_DENSITY		   1050
+// #define POLYSTYRENE_POISSON_RATIO  0.34	
+// 
+// #define GLASS_YOUNG_MODULUS	6.8e+10
+// #define GLASS_DENSITY		2180
+// #define GLASS_POISSON_RATIO	0.19
+// 
+// #define ACRYLIC_YOUNG_MODULUS 3.2E+009
+// #define ACRYLIC_DENSITY			1185
+// #define ACRYLIC_POISSON_RATIO	0.37
 
 struct cmaterialType
 {
@@ -221,6 +222,17 @@ inline std::string material_enum2str(int mt)
 	case STEEL:		str = "steel";		break;
 	}
 	return str;
+}
+
+inline cmaterialType getMaterialConstant(int mt)
+{
+	cmaterialType cmt;
+	switch (mt){
+	case STEEL: cmt.density = STEEL_DENSITY; cmt.youngs = STEEL_YOUNGS_MODULUS; cmt.poisson = STEEL_POISSON_RATIO; break;
+	case ACRYLIC: cmt.density = ACRYLIC_DENSITY; cmt.youngs = ACRYLIC_YOUNG_MODULUS; cmt.poisson = ACRYLIC_POISSON_RATIO; break;
+	}
+
+	return cmt;
 }
 
 inline contact_coefficient calculate_contact_coefficient(cmaterialType* pm
