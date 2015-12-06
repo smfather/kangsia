@@ -130,6 +130,13 @@ struct cmaterialType
 	double poisson;
 };
 
+struct contactConstant
+{
+	double restitution;
+	double friction;
+	double ratio;
+};
+
 struct save_cube_info
 {
 	double px, py, pz;

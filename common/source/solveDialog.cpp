@@ -69,14 +69,12 @@ void solveDialog::callDialog()
 
 void solveDialog::Click_Solve()
 {
+	simTime = LESimTime->text().toFloat();
+	timeStep = LETimeStep->text().toFloat();
+	saveTime = LESaveStep->text().toFloat();
+	caseName = LECaseName->text();
+	basePath = LEBasePath->text();
 	solveDlg->close();
-	DemSimulation *dem = new DemSimulation;
-	dem->SimulationTime() = LESimTime->text().toFloat();
-	dem->TimeStep() = LETimeStep->text().toFloat();
-	dem->SaveStep() = LESaveStep->text().toFloat();
-	//std::map<QString, parview::Object*>::iterator it = GL->Objects().find("Particles");
-	//parview::particles* pars = dynamic_cast<parview::particles*>(it->second);
-	dem->Initialize(GL->Objects());
 }
 
 void solveDialog::Click_Cancel()

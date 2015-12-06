@@ -25,6 +25,13 @@ namespace parview
 
 		void callDialog();
 
+		float simTime;
+		float timeStep;
+		float saveTime;
+
+		QString caseName;
+		QString basePath;
+
 	private:
 		QDialog *solveDlg;
 

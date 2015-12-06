@@ -164,69 +164,69 @@ void particles::_drawPoints()
 
 void particles::define(void* tg)
 {
-	Object *geo = (Object *)tg;
-
-	switch (geo->Type()){
-	case CUBE:
-		{
-			cube *c = dynamic_cast<cube*>(geo);
-			algebra::vector3<unsigned int> dim3np = algebra::vector3<unsigned int>(static_cast<unsigned int>(abs(c->width / (radius * 2)))
-				, static_cast<unsigned int>(abs(c->height / (radius * 2)))
-				, static_cast<unsigned int>(abs(c->depth / (radius * 2))));
-			if (dim3np.x == 0) dim3np.x = 1;
-			if (dim3np.y == 0) dim3np.y = 1;
-			if (dim3np.z == 0) dim3np.z = 1;
-
-			bool bcond = true;
-			vector3<double> p;
-			float spacing = radius * 2.1f;
-			/*np = dim3np.x * dim3np.y * dim3np.z;*/
-			while (bcond){
-				bcond = false;
-				p = vector3<double>(c->minPoint[0] + radius + (dim3np.x - 1) * spacing
-					, c->minPoint[1] + radius + (dim3np.y - 1) * spacing
-					, c->minPoint[2] + radius + (dim3np.z - 1) * spacing);
-				if (p.x + radius > (c->minPoint[0]+c->width) && dim3np.x > 1){
-					dim3np.x--;
-					bcond = true;
-				}
-				if (p.y + radius > (c->minPoint[1]+c->height) && dim3np.y > 1){
-					dim3np.y--;
-					bcond = true;
-				}
-				if (p.z + radius > (c->minPoint[2]+c->depth) && dim3np.z > 1){
-					dim3np.z--;
-					bcond = true;
-				}
-				if (!bcond)
-					break;
-			}
-			np = dim3np.x * dim3np.y * dim3np.z;
-			srand(1973);
-			float jitter = radius * 0.001f;
-			unsigned int p_id = 0;
-			pos[view_controller::getTotalBuffers()] = new float[np * 4];
-			for (unsigned int z = 0; z < dim3np.z; z++){
-				for (unsigned int y = 0; y < dim3np.y; y++){
-					for (unsigned int x = 0; x < dim3np.x; x++){
-						//double dd = frand();
-						pos[view_controller::getTotalBuffers()][p_id * 4 + 0] = (c->minPoint[0] + radius + x*spacing) + frand()*jitter;
-						pos[view_controller::getTotalBuffers()][p_id * 4 + 1] = (c->minPoint[1] + radius + y*spacing) + frand()*jitter;
-						pos[view_controller::getTotalBuffers()][p_id * 4 + 2] = (c->minPoint[2] + radius + z*spacing) + frand()*jitter;
-						pos[view_controller::getTotalBuffers()][p_id * 4 + 3] = radius;
-						p_id++;
-					}
-				}
-			}
-		}
-	}
-	color[view_controller::getTotalBuffers()] = new float[np * 4];
-	for (unsigned int i = 0; i < np; i++){
-		color[view_controller::getTotalBuffers()][i * 4 + 0] = 0.0f;
-		color[view_controller::getTotalBuffers()][i * 4 + 1] = 0.0f;
-		color[view_controller::getTotalBuffers()][i * 4 + 2] = 1.0f;
-		color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
-	}
+// 	Object *geo = (Object *)tg;
+// 
+// 	switch (geo->Type()){
+// 	case CUBE:
+// 		{
+// 			cube *c = dynamic_cast<cube*>(geo);
+// 			algebra::vector3<unsigned int> dim3np = algebra::vector3<unsigned int>(static_cast<unsigned int>(abs(c->width / (radius * 2)))
+// 				, static_cast<unsigned int>(abs(c->height / (radius * 2)))
+// 				, static_cast<unsigned int>(abs(c->depth / (radius * 2))));
+// 			if (dim3np.x == 0) dim3np.x = 1;
+// 			if (dim3np.y == 0) dim3np.y = 1;
+// 			if (dim3np.z == 0) dim3np.z = 1;
+// 
+// 			bool bcond = true;
+// 			vector3<double> p;
+// 			float spacing = radius * 2.1f;
+// 			/*np = dim3np.x * dim3np.y * dim3np.z;*/
+// 			while (bcond){
+// 				bcond = false;
+// 				p = vector3<double>(c->minPoint[0] + radius + (dim3np.x - 1) * spacing
+// 					, c->minPoint[1] + radius + (dim3np.y - 1) * spacing
+// 					, c->minPoint[2] + radius + (dim3np.z - 1) * spacing);
+// 				if (p.x + radius > (c->minPoint[0]+c->width) && dim3np.x > 1){
+// 					dim3np.x--;
+// 					bcond = true;
+// 				}
+// 				if (p.y + radius > (c->minPoint[1]+c->height) && dim3np.y > 1){
+// 					dim3np.y--;
+// 					bcond = true;
+// 				}
+// 				if (p.z + radius > (c->minPoint[2]+c->depth) && dim3np.z > 1){
+// 					dim3np.z--;
+// 					bcond = true;
+// 				}
+// 				if (!bcond)
+// 					break;
+// 			}
+// 			np = dim3np.x * dim3np.y * dim3np.z;
+// 			srand(1973);
+// 			float jitter = radius * 0.001f;
+// 			unsigned int p_id = 0;
+// 			pos[0] = new float[np * 4];
+// 			for (unsigned int z = 0; z < dim3np.z; z++){
+// 				for (unsigned int y = 0; y < dim3np.y; y++){
+// 					for (unsigned int x = 0; x < dim3np.x; x++){
+// 						//double dd = frand();
+// 						pos[0][p_id * 4 + 0] = (c->minPoint[0] + radius + x*spacing) + frand()*jitter;
+// 						pos[0][p_id * 4 + 1] = (c->minPoint[1] + radius + y*spacing) + frand()*jitter;
+// 						pos[0][p_id * 4 + 2] = (c->minPoint[2] + radius + z*spacing) + frand()*jitter;
+// 						pos[0][p_id * 4 + 3] = radius;
+// 						p_id++;
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// 	color[0] = new float[np * 4];
+// 	for (unsigned int i = 0; i < np; i++){
+// 		color[0][i * 4 + 0] = 0.0f;
+// 		color[0][i * 4 + 1] = 0.0f;
+// 		color[0][i * 4 + 2] = 1.0f;
+// 		color[0][i * 4 + 3] = 1.0f;
+// 	}
 
 	glewInit();
 

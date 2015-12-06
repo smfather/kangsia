@@ -43,7 +43,7 @@ namespace algebra
 		void operator*= (T val) { x *= val; y *= val; z *= val; }
 
 		T& operator() (unsigned id){
-			assert(id > 2 && "Error - T vector3::operator() (int id > 2)");
+			//assert(id > 2 && "Error - T vector3::operator() (int id > 2)");
 			return *((&x) + id);
 		}
 

@@ -39,6 +39,18 @@
     <Filter Include="Source Files\Simulation">
       <UniqueIdentifier>{f25bd46f-ed98-47fa-8dc6-8e36128bbbee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Table">
+      <UniqueIdentifier>{0936ab23-fa75-4e6d-8785-f68932e75952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Table">
+      <UniqueIdentifier>{423f1aa9-5e6f-4913-960e-4a61ce0ec4b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CUDA">
+      <UniqueIdentifier>{703bcc9e-821d-4b1c-90a1-ede3f8d461a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CUDA">
+      <UniqueIdentifier>{cd114698-4d15-4e3a-a62e-2151a0d2933d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_parview.cpp">
@@ -146,6 +158,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_DemSimulation.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\source\contactCoefficientTable.cpp">
+      <Filter>Source Files\Table</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_contactCoefficientTable.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_contactCoefficientTable.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\common\resource\parview.ui">
@@ -180,6 +201,9 @@
     </CustomBuild>
     <CustomBuild Include="..\..\common\inc\DEM\DemSimulation.h">
       <Filter>Header Files\Simulation</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\common\inc\contactCoefficientTable.h">
+      <Filter>Header Files\Table</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -219,5 +243,19 @@
     <ClInclude Include="..\..\common\inc\materialLibrary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\common\inc\MyTableWidgetItem.h">
+      <Filter>Header Files\Table</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\cu_dem_dec.cuh">
+      <Filter>Header Files\CUDA</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\cu_dem_impl.cuh">
+      <Filter>Header Files\CUDA</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="..\..\common\source\cu_dem_def.cu">
+      <Filter>Source Files\CUDA</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

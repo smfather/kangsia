@@ -1,7 +1,7 @@
 #ifndef BASESIMULATION_HPP
 #define BASESIMULATION_HPP
 #include <QObject>
-#include <list>
+#include <map>
 #include "types.h"
 
 namespace parview{
@@ -24,6 +24,18 @@ public:
 	unsigned int& SaveStep() { return saveStep; }
 	base_type& SimulationTime() { return simTime; }
 	base_type& TimeStep() { return dt; }
+	void insertContactObject(parview::Object* obj1, parview::Object* obj2)
+	{
+		std::map<parview::Object*, parview::Object*>::iterator it = pairContact.find(obj1);
+		if (it != pairContact.end()){
+			pairContact[obj2] = obj1;
+		}
+		else{
+			pairContact[obj1] = obj2;
+		}
+	}
+	std::map<parview::Object*, parview::Object*>& PairContact() { return pairContact; }
+	std::map<QString, contactConstant>& ContactConstants() { return cconts; }
 
 protected:
 	void setContactCoefficient(cmaterialType m1, cmaterialType m2)
@@ -37,7 +49,8 @@ protected:
 	base_type dt;
 	base_type gravity[3];	
 
-	std::list<parview::Object*> contactObject;
+	std::map<parview::Object*, parview::Object*> pairContact;
+	std::map<QString, contactConstant> cconts;
 };
 
 #endif

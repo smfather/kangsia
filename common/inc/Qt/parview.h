@@ -5,6 +5,7 @@
 #include "ui_parview.h"
 #include "particleInfoDialog.h"
 #include "glwidget.h"
+#include "DEM/DemSimulation.h"
 
 class QLabel;
 
@@ -73,6 +74,8 @@ namespace parview
 		QLabel *Lframe;
 		QLabel *LparticleID;
 		QComboBox *viewObjectComboBox;
+
+		DemSimulation *dem;
 	};
 }
 

@@ -143,12 +143,12 @@ __global__ void calculateHashAndIndex_kernel(unsigned int* hash, unsigned int* i
 {
 	unsigned id = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
 	if(id >= (cte.np + cte.nsp)) return;
-	//volatile double4 p = pos[id];
+	volatile double4 p = pos[id];
 
-	int3 gridPos = calcGridPos(make_double3(pos[id].x, pos[id].y, pos[id].z));
+	int3 gridPos = calcGridPos(make_double3(p.x, p.y, p.z));
 	unsigned _hash=calcGridHash(gridPos);
-	if(_hash >= cte.ncell) 
-		printf("Over limit - hash number : %d", _hash);
+	/*if(_hash >= cte.ncell) 
+		printf("Over limit - hash number : %d", _hash);*/
 	hash[id] = _hash;
 	index[id] = id;
 }
@@ -488,7 +488,7 @@ __device__ bool calculateTriangleParticleContactForce(
 		sp = pos - contact_point;
 		dist = length(sp);
 		//s_unit = -sp / dist;
-		p_unit = poly.N / length(poly.N);
+		p_unit = -poly.N / length(poly.N);
 		//if(dot(s_unit, p_unit) <= 0)
 			//continue;
 		collid_dist = r - dist;

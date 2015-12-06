@@ -57,13 +57,13 @@ void particles::setMaterials(material_type mtype)
 	case ACRYLIC:
 		
 		break;
+// 	case POLYETHYLENE:
+// 		mat_type = POLYSTYRENE;
+// 		material.density = POLYSTYRENE_DENSITY;
+// 		material.youngs = POLYSTYRENE_YOUNGS_MODULUS;
+// 		material.poisson = POLYSTYRENE_POISSON_RATIO;
+// 		break;
 	case POLYETHYLENE:
-		mat_type = POLYSTYRENE;
-		material.density = POLYSTYRENE_DENSITY;
-		material.youngs = POLYSTYRENE_YOUNGS_MODULUS;
-		material.poisson = POLYSTYRENE_POISSON_RATIO;
-		break;
-	case POLYSTYRENE:
 		mat_type = POLYETHYLENE;
 		material.density = POLYETHYLENE_DENSITY;
 		material.youngs = POLYETHYLENE_YOUNGS_MODULUS;
@@ -171,7 +171,7 @@ void particles::CreateParticlesByCube()
 	}
 
 	np = added_np = dim3np.x * dim3np.y * dim3np.z;
-	
+	//np = 1;
 	std::cout << "The number of particle : " << np << "(ea)" << std::endl;
 
 	std::cout << "Allocation of particle memory ";

@@ -1,12 +1,53 @@
-﻿빌드 시작: 2015-12-01 오후 1:47:20
+﻿빌드 시작: 2015-12-06 오전 2:37:19
      1>2 노드의 "C:\C++\kangsia\parSIM3\parSIM3\parSIM3.vcxproj" 프로젝트(Build 대상)입니다.
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(364,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\C++\kangsia\common\inc /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.5\include" /I"C:\ProgramData\NVIDIA Corporation\CUDA Samples\v7.5\common\inc" /IC:\C++\kangsia\common\inc\MBD /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.5\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _CRT_SECURE_NO_WARNINGS /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\common\source\main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\C++\kangsia\common\inc /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" /I"C:\ProgramData\NVIDIA Corporation\CUDA Samples\v7.0\common\inc" /IC:\C++\kangsia\common\inc\MBD /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _CRT_SECURE_NO_WARNINGS /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\common\source\CouplingSystem.cpp ..\..\common\source\Demsimulation.cpp ..\..\common\source\Euler_integrator.cpp ..\..\common\source\HHT_integrator.cpp ..\..\common\source\Integrator.cpp ..\..\common\source\MBD\Mbdsimulation.cpp ..\..\common\source\MBD\constraintCalculator.cpp ..\..\common\source\MBD\driving_constraint.cpp ..\..\common\source\MBD\forceCalculator.cpp ..\..\common\source\MBD\kinematic_constraint.cpp ..\..\common\source\MBD\massCalculator.cpp ..\..\common\source\MBD\pointmass.cpp ..\..\common\source\MBD\rigid_body.cpp ..\..\common\source\Simulation.cpp ..\..\common\source\Verlet_integrator.cpp ..\..\common\source\cell_grid.cpp ..\..\common\source\dem_force.cpp ..\..\common\source\file_system.cpp ..\..\common\source\force.cpp ..\..\common\source\geometry.cpp ..\..\common\source\main.cpp ..\..\common\source\particles.cpp ..\..\common\source\utility\parabola_predictor.cpp ..\..\common\source\writer.cpp
+         CouplingSystem.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+         코드를 생성하고 있습니다...
+         컴파일하고 있습니다...
+         writer.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+         parabola_predictor.cpp
+         particles.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
          main.cpp
-     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.5\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+         geometry.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+         force.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+         file_system.cpp
+         dem_force.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+         cell_grid.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+         Verlet_integrator.cpp
+         Simulation.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+         rigid_body.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+         pointmass.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+         massCalculator.cpp
+         kinematic_constraint.cpp
+         forceCalculator.cpp
+         driving_constraint.cpp
+         constraintCalculator.cpp
+         Mbdsimulation.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+     1>c:\c++\kangsia\common\source\mbd\mbdsimulation.cpp(167): warning C4018: '<' : signed 또는 unsigned가 일치하지 않습니다.
+         Integrator.cpp
+         코드를 생성하고 있습니다...
+         컴파일하고 있습니다...
+         HHT_integrator.cpp
+         Euler_integrator.cpp
+         Demsimulation.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+         코드를 생성하고 있습니다...
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\bin\debug\parSIM3.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\C++\kangsia\lib /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.5\lib\Win32" /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.5\lib\Win32" blas.lib lapack.lib libf2c.lib cudart.lib libxml2.lib iconv.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"..\..\bin\debug\parSIM3.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\..\bin\debug\parSIM3.lib" /MACHINE:X86 Debug\cu_dem_def.cu.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\bin\debug\parSIM3.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\C++\kangsia\lib /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\lib\Win32" /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\lib\Win32" blas.lib lapack.lib libf2c.lib cudart.lib libxml2.lib iconv.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"..\..\bin\debug\parSIM3.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\..\bin\debug\parSIM3.lib" /MACHINE:X86 Debug\cu_dem_def.cu.obj
          Debug\cell_grid.obj
          Debug\CouplingSystem.obj
          Debug\Demsimulation.obj
@@ -38,4 +79,4 @@
 
 빌드했습니다.
 
-경과 시간: 00:00:03.35
+경과 시간: 00:00:27.95

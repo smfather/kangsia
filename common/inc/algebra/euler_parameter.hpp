@@ -21,7 +21,7 @@ namespace algebra
 		}
 
 		T& operator() (unsigned id){
-			assert(id > 3 && "Error - T vector4::operator() (int id > 3)");
+			//assert(id > 3 && "Error - T vector4::operator() (int id > 3)");
 			return *((&e0) + id);
 		}
 

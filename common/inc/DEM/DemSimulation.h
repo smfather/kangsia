@@ -32,6 +32,9 @@ private:
 	float* d_force;
 	float* d_moment;
 
+	int gridSize[3];
+	float worldOrigin[3];
+
 	parview::particles* viewPars;
 };
 

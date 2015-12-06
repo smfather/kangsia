@@ -421,7 +421,7 @@ bool shape::define_geometry()
 		pf >> str;
 		if(str=="GRID*")
 		{
-			pf >> str >> vertex.x >> vertex.z >> str >> str >> str >> vertex.y;
+			pf >> str >> vertex.x >> vertex.y >> str >> str >> str >> vertex.z;
 			vertex = vertex / 1000.0;
 			l_vertex = vertex - com;
 			vertex = l_vertex + position;

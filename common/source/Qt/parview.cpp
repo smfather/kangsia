@@ -2,6 +2,7 @@
 #include "view_particles.h"
 #include "view_controller.h"
 #include "solveDialog.h"
+#include "contactCoefficientTable.h"
 #include <QtWidgets>
 #include <QFileDialog.h>
 
@@ -9,6 +10,7 @@ using namespace parview;
 
 parVIEW::parVIEW(QWidget *parent)
 	: QMainWindow(parent)
+	, dem(NULL)
 {
 	pinfoDialog = NULL;
 	animation_statement = false;
@@ -348,7 +350,41 @@ void parVIEW::makeParticle()
 
 void parVIEW::solveProcess()
 {
+	QMessageBox msgBox;
+	if (!dem){
+		dem = new DemSimulation;
+	}
+	std::map<QString, parview::Object*>::iterator itp = gl->Objects().find("particles");
+	parview::particles *viewPars = dynamic_cast<parview::particles*>(itp->second);
+	if (itp == gl->Objects().end()){
+		msgBox.setIcon(QMessageBox::Critical);
+		msgBox.setText("First, create the particles!!");
+		msgBox.exec();
+	}
+	std::map<QString, QString> pairContact;
+	dem->insertContactObject(itp->second, itp->second);
+	//pairContact[itp->second->Name()] = itp->second->Name();
+	for (std::map<QString, parview::Object*>::iterator it = gl->Objects().begin(); it != gl->Objects().end(); it++){
+		if (it->first != "particles"){
+			if (it->first == viewPars->BaseGeometryText()){
+				continue;
+			}
+			dem->insertContactObject(itp->second, it->second);
+		}
+	}
+
+	contactCoefficientTable cct;
+	cct.setTable(dem->PairContact());
+	cct.exec();
+
+	dem->ContactConstants() = cct.ContactConstants();
+
 	solveDialog solDlg(gl);
 	solDlg.callDialog();
 
+	dem->SimulationTime() = solDlg.simTime;
+	dem->SaveStep() = solDlg.saveTime;
+	dem->TimeStep() = solDlg.timeStep;
+
+	dem->Initialize(gl->Objects());
 }

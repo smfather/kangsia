@@ -161,13 +161,14 @@ void Mbdsimulation::setIntParameter()
 
 void Mbdsimulation::Prediction(unsigned int cStep)
 {
+	unsigned int i = 0;
 	forceCalculator::calculateForceVector(previous, masses);
 	constraintCalculator::sparseConstraintJacobian(mDim, cjaco, masses, kinConsts, driConsts);
-	for(int i(0); i < cjaco.nnz(); i++){
+	for(i=0; i < cjaco.nnz(); i++){
 		previous(cjaco.cidx[i]) -= cjaco.value[i] * lagMul[cjaco.ridx[i] - mDim];
 	}
 	previous *= alpha / (1 + alpha);
-	unsigned int i = 0;
+	i = 0;
 	for(MassIterator mit = masses.begin(); mit != masses.end(); mit++){
 		pointmass* mass = mit->second;
 		if(!mass->ID()) continue;

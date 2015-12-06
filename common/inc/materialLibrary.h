@@ -1,18 +1,18 @@
 #ifndef MATERIALLIBRARY_H
 #define MATERIALLIBRARY_H
 
-#include <QStringList>
-
-inline QStringList getMaterialList(){
-	QStringList stList;
-	stList.push_back("steel");
-	stList.push_back("medium clay");
-	stList.push_back("polyethylene");
-	stList.push_back("glass");
-	stList.push_back("acrylic");
-	stList.push_back("aluminum");
-	return stList;
-}
+// #include <QStringList>
+// 
+// inline QStringList getMaterialList(){
+// 	QStringList stList;
+// 	stList.push_back("steel");
+// 	stList.push_back("medium clay");
+// 	stList.push_back("polyethylene");
+// 	stList.push_back("glass");
+// 	stList.push_back("acrylic");
+// 	stList.push_back("aluminum");
+// 	return stList;
+// }
 
 enum material_type{
 	NO_MATERIAL = 0,

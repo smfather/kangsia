@@ -60,6 +60,7 @@ namespace parview
 		geometry_type Type() { return type; }
 		QString Name() { return name; }
 		mass* Mass_ptr() { return ms;  }
+		cmaterialType Material() { return material; }
 
 	protected:
 		geometry_type type;

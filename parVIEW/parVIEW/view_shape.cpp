@@ -120,7 +120,9 @@ void shape::draw()
 		p = &(position.x);
 	}
 	glTranslatef(p[0], p[1], p[2]);
-
+	glRotatef(90, 0, 0, 1);
+	glRotatef(-20, 1, 0, 0);
+	glRotatef(-90, 0, 0, 1);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_COLOR_MATERIAL);

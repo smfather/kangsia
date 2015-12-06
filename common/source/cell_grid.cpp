@@ -65,9 +65,9 @@ void cell_grid::initialize()
 			if(Geo->second->Geometry() == SHAPE){
 				geo::shape *Shape = dynamic_cast<geo::shape*>(Geo->second);
 				unsigned int snp = Shape->getNp();
-// 				for(unsigned int i = 0; i < snp; i++){
-// 					data[m_np + m_snp + i] = vector4<double>(Shape->getVertice()(i).x, Shape->getVertice()(i).y, Shape->getVertice()(i).z, -1);
-// 				}
+ 				//for(unsigned int i = 0; i < snp; i++){
+ 				//	data[m_np + m_snp + i] = vector4<double>(Shape->getVertice()(i).x, Shape->getVertice()(i).y, Shape->getVertice()(i).z, -1);
+ 				//}
 				std::cout << "    The number of " << Shape->get_name() << " shape point : " << snp << std::endl;
 				m_snp += snp;
 			}
@@ -79,9 +79,9 @@ void cell_grid::initialize()
 	nGrid = m_gs.x * m_gs.y * m_gs.z;
 	data = new vector4<double>[tnp];
 
-	for(unsigned int i = 0; i < m_np; i++){
-		data[i] = dem_sim->getParticles()->Position()[i];
-	}
+ 	for(unsigned int i = 0; i < m_np; i++){
+ 		data[i] = dem_sim->getParticles()->Position()[i];
+ 	}
 
 	if(mbd_sim){
 		for(Geo = mbd_sim->getGeometries()->begin(); Geo != mbd_sim->getGeometries()->end(); Geo++){
@@ -113,7 +113,7 @@ void cell_grid::initialize()
 		checkCudaErrors( cudaMalloc((void**)&d_cell_start, sizeof(unsigned int) * nGrid) );
 		checkCudaErrors( cudaMalloc((void**)&d_cell_end, sizeof(unsigned int) * nGrid) );
 
-		checkCudaErrors( cudaMemcpy(d_data, data, sizeof(tnp) * 4, cudaMemcpyHostToDevice) );
+		checkCudaErrors( cudaMemcpy(d_data, data, sizeof(double) * tnp * 4, cudaMemcpyHostToDevice) );
 		checkCudaErrors( cudaMemcpy(d_cell_id, cell_id, sizeof(unsigned int) * tnp, cudaMemcpyHostToDevice) );
 		checkCudaErrors( cudaMemcpy(d_body_id, body_id, sizeof(unsigned int) * tnp, cudaMemcpyHostToDevice) );
 		checkCudaErrors( cudaMemcpy(d_sorted_id, sorted_id, sizeof(unsigned int) * tnp, cudaMemcpyHostToDevice) );
@@ -224,14 +224,6 @@ void cell_grid::detection()
 		}
 		cu_mergedata(d_data, dem_sim->getParticles()->cu_Position(), m_np, vertice, m_snp);
 		cu_calculateHashAndIndex(d_cell_id, d_body_id, d_data, m_np + m_snp);
-		double *h_data = new double[(m_np + m_snp) * 3];
-		cudaMemcpy(h_data, d_data, sizeof(double)*(m_np + m_snp) * 3, cudaMemcpyDeviceToHost);
-		std::fstream pf;
-		pf.open("C:/C++/result/h_data.txt", std::ios::out);
-		for (unsigned int i = 0; i < m_np + m_snp; i++){
-			pf << h_data[i * 3 + 0] << " " << h_data[i * 3 + 1] << " " << h_data[i * 3 + 2] << std::endl;
-		}
-		pf.close();
 		cu_reorderDataAndFindCellStart(d_cell_id, d_body_id, d_cell_start, d_cell_end, d_sorted_id, m_np + m_snp, nGrid);
 	}
 }

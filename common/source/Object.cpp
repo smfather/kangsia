@@ -27,7 +27,7 @@ Object::Object(geometry_type gt)
 	if (!CBMaterial){
 		LMaterial = new QLabel("Material");
 		CBMaterial = new QComboBox;
-		CBMaterial->addItems(getMaterialList());
+		//CBMaterial->addItems(getMaterialList());
 	}
 }
 
