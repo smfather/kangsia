@@ -319,91 +319,127 @@ unsigned int particles::_compileProgram(const char *vsource, const char *fsource
 	return program;
 }
 
-void particles::updateDataFromFile(QFile& pf)
+void particles::updateDataFromFile(QFile& pf, unsigned int fdtype)
 {
-	double time = 0;
-	double radius = 0;
-	double _pos[3] = { 0, };
-	double _vel[3] = { 0, };
-	color_type clr;
-	int vecSize = 0;
-	
-	pf.read((char*)&vecSize, sizeof(int));
-	pf.read((char*)&time, sizeof(double));
-	pf.read((char*)&np, sizeof(unsigned int));
-	bool *isShapeContact = new bool[np];
-	if (vecSize == 4){
-		pf.read((char*)&clr, sizeof(int));
-		pf.read((char*)&radius, sizeof(double));
+	if (fdtype == 8){
+		double time = 0;
+		double radius = 0;
+		double _pos[3] = { 0, };
+		double _vel[3] = { 0, };
+		color_type clr;
+		int vecSize = 0;
 
-		//QString fname;
-		//fname.sprintf("E:/dem/type1_angle30/part%04d.bin", view_controller::getFrame());
-		//QFile of(fname);
-		//of.open(QIODevice::WriteOnly);
-
-		double *tmp = new double[np * vecSize];
-		pf.read((char*)tmp, sizeof(double) * np * vecSize);
-
-		//of.write((char*)tmp, sizeof(double) * np * vecSize);
-
-		for (unsigned int i = 0; i < np * vecSize; i++){
-			pos[0][i] = (float)tmp[i];
-		}
-		pf.read((char*)tmp, sizeof(double) * np * vecSize);
-
-		//of.write((char*)tmp, sizeof(double) * np * vecSize);
-
-		for (unsigned int i = 0; i < np * vecSize; i++){
-			vel[0][i] = (float)tmp[i];
-		}
-		pf.read((char*)isShapeContact, sizeof(bool)*np);
-		delete[] tmp;
-		for (unsigned int i = 0; i < np; i++){
-			if (isShapeContact[i]){
-				color[0][i * 4 + 0] = 0.0;
-				color[0][i * 4 + 1] = 1.0;
-				color[0][i * 4 + 2] = 0.0;
-				color[0][i * 4 + 3] = 1.0;
+		pf.read((char*)&vecSize, sizeof(int));
+		pf.read((char*)&time, sizeof(double));
+		pf.read((char*)&np, sizeof(unsigned int));
+		bool *isShapeContact = new bool[np];
+		if (vecSize == 4){
+			pf.read((char*)&clr, sizeof(int));
+			pf.read((char*)&radius, sizeof(double));
+			double *tmp = new double[np * vecSize];
+			pf.read((char*)tmp, sizeof(double) * np * vecSize);
+			for (unsigned int i = 0; i < np * vecSize; i++){
+				pos[0][i] = (float)tmp[i];
 			}
+			pf.read((char*)tmp, sizeof(double) * np * vecSize);
+			for (unsigned int i = 0; i < np * vecSize; i++){
+				vel[0][i] = (float)tmp[i];
+			}
+			pf.read((char*)isShapeContact, sizeof(bool)*np);
+			delete[] tmp;
+			for (unsigned int i = 0; i < np; i++){
+				if (isShapeContact[i]){
+					color[0][i * 4 + 0] = 0.0;
+					color[0][i * 4 + 1] = 1.0;
+					color[0][i * 4 + 2] = 0.0;
+					color[0][i * 4 + 3] = 1.0;
+				}
+			}
+			delete[] isShapeContact;
+			return;
 		}
-		delete[] isShapeContact;
-		return;
 	}
-	for (unsigned int i = 0; i < np; i++){
-		pf.read((char*)&clr, sizeof(int));
-		pf.read((char*)&radius, sizeof(double));
-		pf.read((char*)_pos, sizeof(double) * vecSize);
-		pf.read((char*)_vel, sizeof(double) * vecSize);
-		pos[0][i * 4 + 0] = (float)_pos[0];
-		pos[0][i * 4 + 1] = (float)_pos[1];
-		pos[0][i * 4 + 2] = (float)_pos[2];
-		pos[0][i * 4 + 3] = radius == 0.0 ? (float)_pos[3] : radius;
+	else{
+		float time = 0;
+		float radius = 0;
+		float _pos[3] = { 0, };
+		float _vel[3] = { 0, };
+		color_type clr;
+		int vecSize = 0;
 
-		vel[0][i * vecSize + 0] = (float)_vel[0];
-		vel[0][i * vecSize + 0] = (float)_vel[1];
-		vel[0][i * vecSize + 0] = (float)_vel[2];
+		pf.read((char*)&vecSize, sizeof(int));
+		pf.read((char*)&time, sizeof(float));
+		pf.read((char*)&np, sizeof(unsigned int));
+		bool *isShapeContact = new bool[np];
+		if (vecSize == 4){
+			pf.read((char*)&clr, sizeof(int));
+			pf.read((char*)&radius, sizeof(float));
+			pf.read((char*)pos[0], sizeof(float) * np * vecSize);
+			pf.read((char*)vel[0], sizeof(float) * np * vecSize);
+			pf.read((char*)isShapeContact, sizeof(bool)*np);
+			for (unsigned int i = 0; i < np; i++){
+				if (isShapeContact[i]){
+					color[0][i * 4 + 0] = 0.0;
+					color[0][i * 4 + 1] = 1.0;
+					color[0][i * 4 + 2] = 0.0;
+					color[0][i * 4 + 3] = 1.0;
+				}
+			}
+			delete[] isShapeContact;
+			return;
+		}
 	}
-	
 }
 
 void particles::alloc_buffer_dem(QFile& pf, unsigned int fdtype)
 {
 	if (fdtype == 4){
-		float time = 0;
+		float time = 0.0f;
+		float radius = 0.0f;
+		color_type clr;
+		int vecSize = 0;
+		bool *isShapeContact = NULL;
+		pf.read((char*)&vecSize, sizeof(int));
 		pf.read((char*)&time, sizeof(float));
 		pf.read((char*)&np, sizeof(unsigned int));
 		pos[view_controller::getTotalBuffers()] = new float[np * 4];
 		vel[view_controller::getTotalBuffers()] = new float[np * 4];
 		color[view_controller::getTotalBuffers()] = new float[np * 4];
+		isShapeContact = new bool[np];
+		pf.read((char*)&clr, sizeof(int));
+		pf.read((char*)&radius, sizeof(float));
 		pf.read((char*)pos[view_controller::getTotalBuffers()], sizeof(float)*np * 4);
 		pf.read((char*)vel[view_controller::getTotalBuffers()], sizeof(float)*np * 4);
-		float radius = pos[view_controller::getTotalBuffers()][3];
+		pf.read((char*)isShapeContact, sizeof(bool)*np);
 		for (unsigned int i = 0; i < np; i++){
-			color[view_controller::getTotalBuffers()][i * 4 + 0] = 0.0f;
-			color[view_controller::getTotalBuffers()][i * 4 + 1] = 0.0f;
-			color[view_controller::getTotalBuffers()][i * 4 + 2] = 1.0f;
-			color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
+			switch (clr){
+			case RED:
+				color[view_controller::getTotalBuffers()][i * 4 + 0] = 1.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 1] = 0.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 2] = 0.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
+				break;
+			case GREEN:
+				color[view_controller::getTotalBuffers()][i * 4 + 0] = 0.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 1] = 1.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 2] = 0.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
+				break;
+			case BLUE:
+				color[view_controller::getTotalBuffers()][i * 4 + 0] = 0.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 1] = 0.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 2] = 1.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
+				break;
+			}
+			if (isShapeContact[i]){
+				color[view_controller::getTotalBuffers()][i * 4 + 0] = 0.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 1] = 1.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 2] = 0.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
+			}
 		}
+		delete[] isShapeContact;
 	}
 	else{
 		double time = 0;

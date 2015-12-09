@@ -28,7 +28,7 @@ namespace parview
 		virtual void draw();
 		virtual void define(void* tg = 0);
 		virtual void saveCurrentData(QFile& pf);
-		virtual void updateDataFromFile(QFile& pf);
+		virtual void updateDataFromFile(QFile& pf, unsigned int fdtype);
 
 		void alloc_buffer(QFile& pf, unsigned int n);
 		void alloc_buffer_sph(QFile& pf, unsigned int n);

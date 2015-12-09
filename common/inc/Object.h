@@ -50,7 +50,7 @@ namespace parview
 		}
 		virtual void callDialog() = 0;
 		virtual void draw() = 0;
-		virtual void updateDataFromFile(QFile& pf) = 0;
+		virtual void updateDataFromFile(QFile& pf, unsigned int fdtype) = 0;
 		virtual void saveCurrentData(QFile& pf) = 0;
 
 		void allocMass();

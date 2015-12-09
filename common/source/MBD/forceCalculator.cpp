@@ -35,7 +35,7 @@ void forceCalculator::calculateForceVector(algebra::vector<double>& rhs, std::ma
 		if(!mass->ID()) continue;
 		geo::shape *sh = dynamic_cast<geo::shape*>(mass->Geometry());
 		mass->Force() = sh->body_force;
-		nf = 0.0f;//mass->Mass() * Simulation::gravity;// + mass->Force();
+		nf = 0.0;// mass->Mass() * Simulation::gravity;// + mass->Force();
 		rf = calculateInertiaForce(mass->dOrientation(), mass->Inertia(), mass->Orientation());
 		rhs.insert(cnt, POINTER3(nf), POINTER4(rf), 3, 4);
 		cnt += 7;

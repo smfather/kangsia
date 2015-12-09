@@ -120,8 +120,12 @@ void shape::draw()
 		p = &(position.x);
 	}
 	glTranslatef(p[0], p[1], p[2]);
+	if (p[1] <= 0.03574f)
+	{
+		bool pause = true;
+	}
 	glRotatef(90, 0, 0, 1);
-	glRotatef(-20, 1, 0, 0);
+	glRotatef(-5, 1, 0, 0);
 	glRotatef(-90, 0, 0, 1);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_LIGHTING);
@@ -217,7 +221,7 @@ void shape::saveCurrentData(QFile& pf)
 	pf.write((char*)cvel, sizeof(float) * 3);
 }
 
-void shape::updateDataFromFile(QFile& pf)
+void shape::updateDataFromFile(QFile& pf, unsigned int fdtype)
 {
 	if (vertice) { delete[] vertice; vertice = NULL; }
 	if (indice) { delete[] indice; indice = NULL; }

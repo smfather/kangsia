@@ -51,7 +51,7 @@ void mass::saveCurrentData(QFile& pf)
 	
 }
 
-void mass::updateDataFromFile(QFile& pf)
+void mass::updateDataFromFile(QFile& pf, unsigned int fdtype)
 {
 	vector3<double> v3;
 	pf.read((char*)&v3, sizeof(vector3<double>));

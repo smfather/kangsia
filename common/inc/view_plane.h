@@ -15,7 +15,7 @@ namespace parview
 		virtual void draw();
 		virtual void define(void* tg = 0);
 		virtual void saveCurrentData(QFile& pf);
-		virtual void updateDataFromFile(QFile& pf){}
+		virtual void updateDataFromFile(QFile& pf, unsigned int fdtype){}
 
 	private:
 		save_plane_info spi;

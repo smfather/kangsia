@@ -143,6 +143,12 @@ struct save_cube_info
 	double sx, sy, sz;
 };
 
+struct save_cube_info_f
+{
+	float px, py, pz;
+	float sx, sy, sz;
+};
+
 struct save_plane_info
 {
 	double p0x, p0y, p0z;

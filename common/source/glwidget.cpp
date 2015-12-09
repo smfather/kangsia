@@ -726,14 +726,28 @@ void GLWidget::getDemFileData(QStringList& fnames, bool rt)
 					parview::cube* c = new parview::cube;
 					c->setType(CUBE);
 					c->setName(name);
-					save_cube_info sci;
-					double vertice[24] = { 0, };
-					pf.read((char*)&sci, sizeof(save_cube_info));
-					c->origin[0] = (float)sci.px; c->origin[1] = (float)sci.py; c->origin[2] = (float)sci.pz;
-					c->width = (float)sci.sx; c->height = (float)sci.sy; c->depth = (float)sci.sz;
-					pf.read((char*)vertice, sizeof(double) * 3 * 8);
-					for (int i = 0; i < 24; i++){
-						c->vertice[i] = (float)vertice[i];
+					if (fdtype == 4){
+						save_cube_info_f sci;
+						float vertice[24] = { 0, };
+						pf.read((char*)&sci, sizeof(save_cube_info_f));
+						c->origin[0] = sci.px; c->origin[1] = sci.py; c->origin[2] = sci.pz;
+						c->width = sci.sx; c->height = sci.sy; c->depth = sci.sz;
+						pf.read((char*)vertice, sizeof(float) * 3 * 8);
+						for (int i = 0; i < 24; i++){
+							c->vertice[i] = vertice[i];
+						}
+					}
+					else{
+						save_cube_info sci;
+
+						double vertice[24] = { 0, };
+						pf.read((char*)&sci, sizeof(save_cube_info));
+						c->origin[0] = (float)sci.px; c->origin[1] = (float)sci.py; c->origin[2] = (float)sci.pz;
+						c->width = (float)sci.sx; c->height = (float)sci.sy; c->depth = (float)sci.sz;
+						pf.read((char*)vertice, sizeof(double) * 3 * 8);
+						for (int i = 0; i < 24; i++){
+							c->vertice[i] = (float)vertice[i];
+						}
 					}
 					c->define();
 					objs[name] = c;
@@ -743,7 +757,7 @@ void GLWidget::getDemFileData(QStringList& fnames, bool rt)
 				{
 					parview::shape* sh = new parview::shape;
 
-					sh->setShapeData(pf);
+					sh->setShapeData(pf, fdtype);
 
 					sh->define();
 					objs[sh->Name()] = sh;
@@ -1030,7 +1044,7 @@ void GLWidget::UpdateRtDEMData()
 	unsigned int fdtype;
 	pf.read((char*)&fdtype, sizeof(unsigned int));
 	std::map<QString, Object*>::iterator obj = objs.find("particles");
-	obj->second->updateDataFromFile(pf);
+	obj->second->updateDataFromFile(pf, fdtype);
 	pf.read((char*)&type, sizeof(int));
 	if (type == MASS){
 		QString name;
@@ -1045,7 +1059,7 @@ void GLWidget::UpdateRtDEMData()
 			if (!obj->second->Mass_ptr())
 				obj->second->allocMass();
 
-			obj->second->Mass_ptr()->updateDataFromFile(pf);
+			obj->second->Mass_ptr()->updateDataFromFile(pf, fdtype);
 		}
 	}
 }
@@ -1055,7 +1069,7 @@ void GLWidget::ChangeShapeData(QString& sname)
 	std::map<QString, Object*>::iterator obj = objs.find("trawl");
 	QFile pf(sname);
 	pf.open(QIODevice::ReadOnly);
-	obj->second->updateDataFromFile(pf);
+	obj->second->updateDataFromFile(pf, 8);
 }
 
 void GLWidget::AddParticles(QString& fname)
@@ -1090,7 +1104,7 @@ void GLWidget::ChangeDisplayOption(int oid)
 void GLWidget::ExportForceData()
 {
 	std::map<QString, Object*>::iterator obj = objs.find("trawl");
-	QFile pf("C:/C++/result/trawl_force data/type2_angle20.txt");
+	QFile pf("C:/C++/result/trawl_force data/case5.txt");
 	pf.open(QIODevice::WriteOnly);
 	QTextStream of(&pf);
 	for (unsigned int i = 0; i < view_controller::getTotalBuffers(); i++){

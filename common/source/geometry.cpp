@@ -377,7 +377,7 @@ bool shape::setSpecificDataFromFile(std::fstream& pf)
 	position.x = static_cast<double>(tv3[0]);
 	position.y = static_cast<double>(tv3[1]);
 	position.z = static_cast<double>(tv3[2]);
-	position.z = 0.25;
+	//position.z = 0.25;
 	vector3<double> velocity(static_cast<double>(tv3[0]),
 		static_cast<double>(tv3[1]),
 		static_cast<double>(tv3[2])
