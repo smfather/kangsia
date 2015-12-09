@@ -17,6 +17,7 @@ double Simulation::sim_time = 0.0;
 double Simulation::time = 0.0;
 double Simulation::dt = 1e-5;
 vector3<double> Simulation::gravity = vector3<double>(0.0, -9.80665, 0.0);
+unsigned int Simulation::cStep = 0;
 
 Simulation::Simulation(std::string name)
 	: Name(name)

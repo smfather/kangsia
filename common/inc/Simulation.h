@@ -85,6 +85,7 @@ namespace parSIM
 		static double time;
 		static double dt;
 		static vector3<double> gravity;
+		static unsigned int cStep;
 
 	protected:
 		std::string Name;

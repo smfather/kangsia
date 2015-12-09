@@ -2,6 +2,7 @@
 #include "cu_dem_dec.cuh"
 
 using namespace parSIM;
+bool pointmass::OnMoving = false;
 
 pointmass::pointmass( Simulation* _sim, std::string _name, geometry* _Geo, mass_type mt)
 	: sim(_sim)
@@ -104,5 +105,6 @@ void pointmass::setMovingFunction(vector3<double>(*func)(vector3<double>, double
 
 void pointmass::RunMoving(double t)
 {
-	pos = MovingFunc(pos, t);
+	if (OnMoving)
+		pos = MovingFunc(pos, t);
 }

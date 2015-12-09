@@ -37,8 +37,18 @@ void rigid_body::define(unsigned int Id, double m, vector3<double>& diagIner, ve
 
 void rigid_body::save2file(std::fstream& of)
 {
-//   	if(pos.y < 0.03574)
-//   		std::cout << "trawl y position is " << pos.y << std::endl;
+	std::cout << "position y is " << pos.y << std::endl;
+	if (pos.y < 0.03574 && forceCalculator::OnGravityForce == true)
+	{
+		forceCalculator::OnGravityForce = false;
+		pointmass::OnMoving = true;
+		Simulation::cStep = 0;
+		std::cout << "-------------------------------------------------------------------------" << std::endl;
+		std::cout << "---------------------- Moving Condition is begin!! ----------------------" << std::endl;
+		std::cout << "-------------------------------------------------------------------------" << std::endl;
+		std::cout << "position y is " << pos.y << std::endl;
+	}
+		
 	int name_size = name.size();
 	of.write((char*)&name_size, sizeof(int));
 	of.write((char*)name.c_str(), sizeof(char) * name_size);

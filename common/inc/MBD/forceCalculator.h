@@ -25,6 +25,7 @@ namespace parSIM
 		void setAppliedForceElements(std::vector<appliedForceElement>* _aforces) { isAppliedForce = true; aforces = _aforces; }
 
 		void setGravity(vector3<double>& gra) { gravity = gra; }
+		static bool OnGravityForce;
 
 	private:
 		vector3d gravity;

@@ -172,7 +172,7 @@ void Mbdsimulation::Prediction(unsigned int cStep)
 	for(MassIterator mit = masses.begin(); mit != masses.end(); mit++){
 		pointmass* mass = mit->second;
 		if(!mass->ID()) continue;
-		if(mass->IsMovingPart()){
+		if(pointmass::OnMoving){
 			mass->RunMoving(Simulation::dt * cStep);
 		}
 		else{
@@ -193,7 +193,7 @@ void Mbdsimulation::Prediction(unsigned int cStep)
 		pointmass* mass = mit->second;
 		if(!mass->ID()) continue;
 		
-		if(mass->IsMovingPart()){
+		if(pointmass::OnMoving){
 		}
 		else{
 			for(int j(0); j < 3; j++){

@@ -62,6 +62,8 @@ namespace parSIM
 
 		void RunMoving(double t);
 
+		static bool OnMoving;
+
 	protected:
 		bool isMovingPart;
 		unsigned int id;
