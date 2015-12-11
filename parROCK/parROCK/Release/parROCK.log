@@ -1,0 +1,26 @@
+﻿빌드 시작: 2015-08-31 오후 1:08:59
+     1>2 노드의 "C:\C++\kangsia\parROCK\parROCK\parROCK.vcxproj" 프로젝트(Build 대상)입니다.
+     1>Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\C++\kangsia\parROCK\Release\parROCK.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\C++\kangsia\lib /LIBPATH:\lib /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\lib\Win32" cudart.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\C++\kangsia\parROCK\Release\parROCK.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\C++\kangsia\parROCK\Release\parROCK.lib" /MACHINE:X86 /SAFESEH Release\CementElement.obj
+         Release\ball.obj
+         Release\Cluster.obj
+         Release\contact.obj
+         Release\Geometry.obj
+         Release\Object.obj
+         Release\ParallelBondProperty.obj
+         Release\RockElement.obj
+         Release\RockSimulation.obj
+         Release\RockSimulationParameters.obj
+         Release\Simulation.obj
+         Release\sorter.obj
+         Release\WallElement.obj
+         Release\writer.obj
+         Release\main.obj
+         코드를 생성하고 있습니다.
+         코드를 생성했습니다.
+         parROCK.vcxproj -> C:\C++\kangsia\parROCK\Release\parROCK.exe
+     1>"C:\C++\kangsia\parROCK\parROCK\parROCK.vcxproj" 프로젝트를 빌드했습니다(Build 대상).
+
+빌드했습니다.
+
+경과 시간: 00:00:02.24

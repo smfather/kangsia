@@ -1,0 +1,17 @@
+﻿빌드 시작: 2015-11-10 오전 3:30:42
+     1>2 노드의 "C:\C++\kangsia\parRock_v2\parRock_v2\parRock_v2.vcxproj" 프로젝트(Rebuild 대상)입니다.
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\C++\kangsia\common\inc /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _CRT_SECURE_NO_WARNINGS /D _USE_MATH_DEFINES /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /wd4800 /analyze- /errorReport:prompt ..\..\common\inc\parRock_v2\RockSimulation.hpp ..\..\common\source\parRock_v2\main.cpp
+         RockSimulation.hpp
+         main.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\C++\kangsia\parRock_v2\Release\parRock_v2.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\lib\Win32" cudart.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\C++\kangsia\parRock_v2\Release\parRock_v2.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\C++\kangsia\parRock_v2\Release\parRock_v2.lib" /MACHINE:X86 /SAFESEH Release\RockSimulation.obj
+         Release\main.obj
+         코드를 생성하고 있습니다.
+         코드를 생성했습니다.
+         parRock_v2.vcxproj -> C:\C++\kangsia\parRock_v2\Release\parRock_v2.exe
+     1>"C:\C++\kangsia\parRock_v2\parRock_v2\parRock_v2.vcxproj" 프로젝트를 빌드했습니다(Rebuild 대상).
+
+빌드했습니다.
+
+경과 시간: 00:00:04.46

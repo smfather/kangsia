@@ -1,47 +1,11 @@
-﻿빌드 시작: 2015-12-10 오전 2:23:41
+﻿빌드 시작: 2015-12-10 오후 12:07:00
      1>2 노드의 "C:\C++\kangsia\parVIEW\parVIEW\parVIEW.vcxproj" 프로젝트(Build 대상)입니다.
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /IC:\Qt\5.4\msvc2013_opengl\include /I.\GeneratedFiles\Debug /IC:\Qt\5.4\msvc2013_opengl\include\QtCore /IC:\Qt\5.4\msvc2013_opengl\include\QtGui /IC:\Qt\5.4\msvc2013_opengl\include\QtOpenGL /IC:\Qt\5.4\msvc2013_opengl\include\QtWidgets /IC:\C++\kangsia\common\inc\Qt /IC:\C++\kangsia\common\inc /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" /I"C:\ProgramData\NVIDIA Corporation\CUDA Samples\v7.0\common\inc" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D WIN64 /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /wd4819 /analyze- /errorReport:prompt ..\..\common\source\contactCoefficientTable.cpp ..\..\common\source\Qt\particleInfoDialog.cpp ..\..\common\source\Qt\parview.cpp
-         contactCoefficientTable.cpp
-         particleInfoDialog.cpp
-         parview.cpp
-         코드를 생성하고 있습니다...
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /IC:\Qt\5.4\msvc2013_opengl\include /I.\GeneratedFiles\Debug /IC:\Qt\5.4\msvc2013_opengl\include\QtCore /IC:\Qt\5.4\msvc2013_opengl\include\QtGui /IC:\Qt\5.4\msvc2013_opengl\include\QtOpenGL /IC:\Qt\5.4\msvc2013_opengl\include\QtWidgets /IC:\C++\kangsia\common\inc\Qt /IC:\C++\kangsia\common\inc /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" /I"C:\ProgramData\NVIDIA Corporation\CUDA Samples\v7.0\common\inc" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D WIN64 /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /wd4819 /analyze- /errorReport:prompt GeneratedFiles\qrc_parview.cpp
-         qrc_parview.cpp
+     1>CudaBuild:
+         Skipping CUDA source file ..\..\common\source\cu_dem_def.cu (excluded from build).
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\..\bin\debug\\parVIEW.exe" /NOLOGO /LIBPATH:C:\Qt\5.4\msvc2013_opengl\lib /LIBPATH:C:\C++\kangsia\lib /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\lib\Win32" /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\lib\Win32" cudart.lib freeglut.lib glew32.lib qtmaind.lib Qt5Cored.lib Qt5Guid.lib Qt5OpenGLd.lib opengl32.lib glu32.lib Qt5Widgetsd.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"..\..\bin\debug\parVIEW.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\..\bin\debug\parVIEW.lib" /MACHINE:X86 /SAFESEH Debug\cu_dem_def.cu.obj
-         Debug\contactCoefficientTable.obj
-         Debug\DemSimulation.obj
-         Debug\glwidget.obj
-         Debug\Object.obj
-         Debug\main.obj
-         Debug\particleInfoDialog.obj
-         Debug\parview.obj
-         Debug\shader.obj
-         Debug\solveDialog.obj
-         Debug\view_bondData.obj
-         Debug\view_controller.obj
-         Debug\view_cube.obj
-         Debug\view_line.obj
-         Debug\view_mass.obj
-         Debug\view_object.obj
-         Debug\view_particles.obj
-         Debug\view_plane.obj
-         Debug\view_rectangle.obj
-         Debug\moc_contactCoefficientTable.obj
-         Debug\moc_DemSimulation.obj
-         Debug\moc_glwidget.obj
-         Debug\moc_Object.obj
-         Debug\moc_particleInfoDialog.obj
-         Debug\moc_parview.obj
-         Debug\moc_solveDialog.obj
-         Debug\moc_view_cube.obj
-         Debug\moc_view_particles.obj
-         Debug\qrc_parview.obj
-         Debug\view_shape.obj
          parVIEW.vcxproj -> C:\C++\kangsia\parVIEW\parVIEW\..\..\bin\debug\parVIEW.exe
      1>"C:\C++\kangsia\parVIEW\parVIEW\parVIEW.vcxproj" 프로젝트를 빌드했습니다(Build 대상).
 
 빌드했습니다.
 
-경과 시간: 00:00:06.79
+경과 시간: 00:00:00.38

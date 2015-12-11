@@ -55,20 +55,20 @@ parVIEW::parVIEW(QWidget *parent)
 	connect(ui.actionChange_Shape, SIGNAL(triggered()), this, SLOT(ChangeShape()));
 
 	ui.mainToolBar->addAction(newAct);
-	ui.mainToolBar->addAction(openAct);
+	//ui.mainToolBar->addAction(openAct);
 	ui.mainToolBar->addAction(openRtAct);
 	ui.mainToolBar->addAction(saveAct);
-	ui.mainToolBar->addAction(pinfoAct);
-	ui.mainToolBar->addAction(makeCubeAct);
-	ui.mainToolBar->addAction(makeParticleAct);
-	ui.mainToolBar->addAction(solveProcessAct);
+// 	ui.mainToolBar->addAction(pinfoAct);
+// 	ui.mainToolBar->addAction(makeCubeAct);
+// 	ui.mainToolBar->addAction(makeParticleAct);
+// 	ui.mainToolBar->addAction(solveProcessAct);
 
-	viewObjectComboBox = new QComboBox;
-	viewObjectComboBox->insertItem(0, "All display");
-	viewObjectComboBox->insertItem(1, "Only frame");
-	viewObjectComboBox->insertItem(2, "Only particle");
-	connect(viewObjectComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangeComboBox(int)));
-	ui.secToolBar->addWidget(viewObjectComboBox);
+// 	viewObjectComboBox = new QComboBox;
+// 	viewObjectComboBox->insertItem(0, "All display");
+// 	viewObjectComboBox->insertItem(1, "Only frame");
+// 	viewObjectComboBox->insertItem(2, "Only particle");
+// 	connect(viewObjectComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangeComboBox(int)));
+// 	ui.secToolBar->addWidget(viewObjectComboBox);
 
 	aniPreviousAct2 = new QAction(QIcon(":/image/ani_moreprevious.png"), tr("&previous2x"), this);
 	aniPreviousAct2->setStatusTip(tr("2x previous for animation."));

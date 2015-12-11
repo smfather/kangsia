@@ -1,0 +1,42 @@
+﻿빌드 시작: 2015-10-20 오전 11:51:14
+     1>2 노드의 "C:\C++\kangsia\parROCK\parROCK\parROCK.vcxproj" 프로젝트(Build 대상)입니다.
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\C++\kangsia\common\inc\parROCK /I\include /I\common\inc /IC:\C++\kangsia\common\inc\utility /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _CRT_SECURE_NO_WARNINGS /D _USE_MATH_DEFINES /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\common\source\parROCK\Cluster.cpp ..\..\common\source\parROCK\Geometry.cpp ..\..\common\source\parROCK\Object.cpp ..\..\common\source\parROCK\ParallelBondProperty.cpp ..\..\common\source\parROCK\RockSimulation.cpp ..\..\common\source\parROCK\Simulation.cpp ..\..\common\source\parROCK\ball.cpp ..\..\common\source\parROCK\contact.cpp ..\..\common\source\parROCK\sorter.cpp ..\..\common\source\utility\writer.cpp main.cpp
+         RockSimulation.cpp
+         코드를 생성하고 있습니다...
+         컴파일하고 있습니다...
+         main.cpp
+         writer.cpp
+         sorter.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+         contact.cpp
+         ball.cpp
+         Simulation.cpp
+         ParallelBondProperty.cpp
+         Object.cpp
+         Geometry.cpp
+     1>c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\thrust\system\cuda\detail\bulk\detail\pointer_traits.hpp(55): warning C4800: 'unsigned int' : 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+         Cluster.cpp
+         코드를 생성하고 있습니다...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\C++\kangsia\parROCK\Debug\parROCK.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\C++\kangsia\lib /LIBPATH:\lib /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\lib\Win32" cudart.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\C++\kangsia\parROCK\Debug\parROCK.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\C++\kangsia\parROCK\Debug\parROCK.lib" /MACHINE:X86 Debug\CementElement.obj
+         Debug\ball.obj
+         Debug\Cluster.obj
+         Debug\contact.obj
+         Debug\Geometry.obj
+         Debug\Object.obj
+         Debug\ParallelBondProperty.obj
+         Debug\RockElement.obj
+         Debug\RockSimulation.obj
+         Debug\RockSimulationParameters.obj
+         Debug\Simulation.obj
+         Debug\sorter.obj
+         Debug\WallElement.obj
+         Debug\writer.obj
+         Debug\main.obj
+         parROCK.vcxproj -> C:\C++\kangsia\parROCK\Debug\parROCK.exe
+     1>"C:\C++\kangsia\parROCK\parROCK\parROCK.vcxproj" 프로젝트를 빌드했습니다(Build 대상).
+
+빌드했습니다.
+
+경과 시간: 00:00:08.01

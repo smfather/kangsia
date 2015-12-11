@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일\Object">
+      <UniqueIdentifier>{e461a54a-5b27-4108-82fa-1c5170726498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\parRock_v2">
+      <UniqueIdentifier>{5472adad-df2f-4c31-bf9c-716fd701dc27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Util">
+      <UniqueIdentifier>{c4dca9aa-b375-4156-b8cf-10bca6a97e53}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\common\inc\parRock_v2\types.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\parRock_v2\Simulation.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\Object\Pointmass.hpp">
+      <Filter>헤더 파일\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\Object\Geometry.hpp">
+      <Filter>헤더 파일\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\parRock_v2\CementElement.hpp">
+      <Filter>헤더 파일\parRock_v2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\parRock_v2\RockElement.hpp">
+      <Filter>헤더 파일\parRock_v2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\parRock_v2\RockSimulationParameters.hpp">
+      <Filter>헤더 파일\parRock_v2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\parRock_v2\WallElement.hpp">
+      <Filter>헤더 파일\parRock_v2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\Object\RigidBody.hpp">
+      <Filter>헤더 파일\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\Util\NeighboringCell.hpp">
+      <Filter>헤더 파일\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\Contact.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\Object\Particle.hpp">
+      <Filter>헤더 파일\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\parRock_v2\ParallelBondProperty.hpp">
+      <Filter>헤더 파일\parRock_v2</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\common\source\parRock_v2\main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\parRock_v2\RockSimulation.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\parRock_v2\Geometry.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\parRock_v2\CementElement.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\parRock_v2\RockElement.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\parRock_v2\RockSimulationParameters.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\parRock_v2\WallElement.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\parRock_v2\particles.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\inc\parRock_v2\RockSimulation.hpp">
+      <Filter>헤더 파일\parRock_v2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\Object\Particle.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\Contact.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\common\source\parRock_v2\Simulation.cpp">
+      <Filter>소스 파일</Filter>
+    </None>
+  </ItemGroup>
+</Project>
