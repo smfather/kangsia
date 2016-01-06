@@ -58,15 +58,15 @@ GLWidget::GLWidget(/*document* _Doc,*/ QWidget *parent)
 {
 	
 	viewOption = 0;
-	xRot = 0;
-	yRot = 0;
+	xRot = 1440;// 0;
+	yRot = 1440;// 0;
 	zRot = 0;
 	unit = 1;
-	zoom = -1.0;
+	zoom = -0.72;// -1.0;
 	//zoom = -6.16199875;
-	trans_x = 0;
+	trans_x = -0.11;// 0;
 	moveScale = 0.01f;
-	trans_y = 0;
+	trans_y = -0.254;// 0;
 	IconScale = 0.1;
 	isSetParticle = false;
 	//particle_ptr = NULL;
@@ -1104,7 +1104,7 @@ void GLWidget::ChangeDisplayOption(int oid)
 void GLWidget::ExportForceData()
 {
 	std::map<QString, Object*>::iterator obj = objs.find("trawl");
-	QFile pf("C:/C++/result/trawl_force data/case5.txt");
+	QFile pf("C:/C++/result/trawl_force data/case9.txt");
 	pf.open(QIODevice::WriteOnly);
 	QTextStream of(&pf);
 	for (unsigned int i = 0; i < view_controller::getTotalBuffers(); i++){

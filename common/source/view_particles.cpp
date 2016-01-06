@@ -502,6 +502,44 @@ void particles::alloc_buffer_dem(QFile& pf, unsigned int fdtype)
 			}
 			delete[] isShapeContact;
 		}
+		else{
+			double *tmp = new double[vecSize];
+			for (unsigned int i = 0; i < np; i++){
+				pf.read((char*)&clr, sizeof(int));
+				// 				switch (clr){
+				// 				case RED:
+				// 					color[view_controller::getTotalBuffers()][i * 4 + 0] = 1.0f;
+				// 					color[view_controller::getTotalBuffers()][i * 4 + 1] = 0.0f;
+				// 					color[view_controller::getTotalBuffers()][i * 4 + 2] = 0.0f;
+				// 					color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
+				// 					break;
+				// 				case GREEN:
+				color[view_controller::getTotalBuffers()][i * 4 + 0] = 0.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 1] = 1.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 2] = 0.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
+				// 					break;
+				// 				case BLUE:
+				// 					color[view_controller::getTotalBuffers()][i * 4 + 0] = 0.0f;
+				// 					color[view_controller::getTotalBuffers()][i * 4 + 1] = 0.0f;
+				// 					color[view_controller::getTotalBuffers()][i * 4 + 2] = 1.0f;
+				// 					color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
+				// 					break;
+				// 				}
+				pf.read((char*)&radius, sizeof(double));
+				pf.read((char*)tmp, sizeof(double)*vecSize);
+				pos[view_controller::getTotalBuffers()][i * 4 + 0] = tmp[0];
+				pos[view_controller::getTotalBuffers()][i * 4 + 1] = tmp[1];
+				pos[view_controller::getTotalBuffers()][i * 4 + 2] = tmp[2];
+				pos[view_controller::getTotalBuffers()][i * 4 + 3] = radius;
+				pf.read((char*)tmp, sizeof(double)*vecSize);
+				vel[view_controller::getTotalBuffers()][i * 4 + 0] = tmp[0];
+				vel[view_controller::getTotalBuffers()][i * 4 + 1] = tmp[1];
+				vel[view_controller::getTotalBuffers()][i * 4 + 2] = tmp[2];
+				vel[view_controller::getTotalBuffers()][i * 4 + 3] = 0.0;
+			}
+			delete[] tmp;
+		}
 	}
 }
 
@@ -722,18 +760,19 @@ void particles::changeParticleColor(unsigned int id)
 
 void particles::AddParticlesFromFile(QFile& pf)
 {
-	unsigned int addnp;
-	pf.read((char*)&addnp, sizeof(unsigned int));
-	vector3<double> ttpos;
+	unsigned int addnp = 742500;
+	//pf.read((char*)&addnp, sizeof(unsigned int));
+	vector3<double> *ttpos = new vector3<double>[addnp];
 	float *tpos = new float[(np + addnp) * 4];
 	float *tclr = new float[(np + addnp) * 4];
 	memcpy(tpos, pos[view_controller::getFrame()], sizeof(float) * 4 * np);
 	memcpy(tclr, color[view_controller::getFrame()], sizeof(float) * 4 * np);
-	for (unsigned int i = np; i < addnp; i++){
-		pf.read((char*)&ttpos, sizeof(double) * 3);
-		tpos[i * 4 + 0] = (float)ttpos.x;
-		tpos[i * 4 + 1] = (float)ttpos.y;
-		tpos[i * 4 + 2] = (float)ttpos.z;
+	pf.read((char*)ttpos, sizeof(double) * 3 * addnp);
+	for (unsigned int i = np; i < addnp + np; i++){
+
+		tpos[i * 4 + 0] = (float)ttpos[i - np].x;
+		tpos[i * 4 + 1] = (float)ttpos[i - np].y;
+		tpos[i * 4 + 2] = (float)ttpos[i - np].z;
 		tpos[i * 4 + 3] = pos[view_controller::getFrame()][4];
 
 		tclr[i * 4 + 0] = 0.0f;
@@ -747,12 +786,12 @@ void particles::AddParticlesFromFile(QFile& pf)
 
 	pos[view_controller::getFrame()] = new float[(np + addnp) * 4];
 	color[view_controller::getFrame()] = new float[(np + addnp) * 4];
-	memcpy(pos[view_controller::getFrame()], tpos, sizeof(float)*(np + addnp)*4);
-	memcpy(color[view_controller::getFrame()], tclr, sizeof(float)*(np + addnp)*4);
+	memcpy(pos[view_controller::getFrame()], tpos, sizeof(float)*(np + addnp) * 4);
+	memcpy(color[view_controller::getFrame()], tclr, sizeof(float)*(np + addnp) * 4);
 	np = np + addnp;
 	delete[] tpos;
 	delete[] tclr;
-
+	delete[] ttpos;
 
 	unsigned int memSize = sizeof(float) * 4 * np;
 	glDeleteBuffers(1, &m_posVBO); m_posVBO = 0;

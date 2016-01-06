@@ -628,6 +628,13 @@ void RockSimulation::IsotropicMakeBalls()
 				}
 			}
 		}
+// 		std::fstream of;
+// 		of.open("C:/C++/add_particle.bin", std::ios::out);
+// 		for (unsigned int i = 0; i < cnt; i++){
+// 			ball* b = &Balls()[i];
+// 			of.write((char*)&b->Position(), sizeof(vector3<double>));
+// 		}
+// 		of.close();
 	}
 	}
 }
@@ -1057,6 +1064,7 @@ bool RockSimulation::RockRunCycle(unsigned int cyc, unsigned int savecyc)
 	unsigned int curRun = 0;
 	unsigned int eachRun = 0;
 	times = curRun * dt;
+	std::cout << dt << std::endl;
 	double elapsed_time = 0;
 	std::cout << "---------------------------------------------------------------------------------" << std::endl
 		<< "| Num. Part | Sim. Time | I. Part | I. Total | Elapsed Time |        Date       |" << std::endl

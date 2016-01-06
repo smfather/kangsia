@@ -51,8 +51,8 @@ int main(int argc, char** argv)
 
 	geo::Cube *specimen = new geo::Cube(sim, "specimen", GEO_PARTICLE);
 	//specimen->Define(vec2(0.0, 0.0), vec2(0.08, 0.04));
-	specimen->Define(vector3<double>(0.0, -0.04, -0.04), vector3<double>(0.12, 0.0, 0.04));
-	//specimen->Define(vector3<double>(0.0, -0.0096, -0.01), vector3<double>(0.02, 0.0, 0.01));
+	//specimen->Define(vector3<double>(0.0, -0.04, -0.04), vector3<double>(0.12, 0.0, 0.04));
+	specimen->Define(vector3<double>(0.0, -0.0096, -0.01), vector3<double>(0.02, 0.0, 0.01));
 	//specimen->Define(vec2(0.0, 0.0), vec2(0.0032, 0.0032));
 
 //	Object* pick = new Object(sim);
@@ -76,8 +76,8 @@ int main(int argc, char** argv)
 
 	geo::Cube *cube = new geo::Cube(sim, "cube", GEO_BOUNDARY);
 	//specimen->Define(vec2(0.0, 0.0), vec2(0.08, 0.04));
-	//cube->Define(vector3<double>(0.0, -0.0096, -0.01), vector3<double>(0.02, 0.0, 0.01));
-	cube->Define(vector3<double>(0.0, -0.04, -0.04), vector3<double>(0.12, 0.0, 0.04));
+	cube->Define(vector3<double>(0.0, -0.0096, -0.01), vector3<double>(0.02, 0.0, 0.01));
+	//cube->Define(vector3<double>(0.0, -0.04, -0.04), vector3<double>(0.12, 0.0, 0.04));
 	geo::Shape *pick = new geo::Shape(sim, "pick", GEO_MOVING_BODY);
 	pick->Define("C:/C++/case/dem/pick.dat", vector3<double>(0.0,-0.001,0.0), TUNGSTEN_CARBIDE);
 	pick->setFunction(func1);

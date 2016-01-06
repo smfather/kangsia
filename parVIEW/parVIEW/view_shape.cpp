@@ -120,14 +120,14 @@ void shape::draw()
 		p = &(position.x);
 	}
 	glTranslatef(p[0], p[1], p[2]);
-	if (p[1] <= 0.03574f)
-	{
-		bool pause = true;
-	}
+// 	if (p[1] <= 0.03574f)
+// 	{
+// 		bool pause = true;
+// 	}
 	glRotatef(90, 0, 0, 1);
 	glRotatef(-5, 1, 0, 0);
 	glRotatef(-90, 0, 0, 1);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_COLOR_MATERIAL);
 	for (unsigned int i = 0; i < i_size; i++){

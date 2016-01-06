@@ -49,27 +49,14 @@ bool Demsimulation::initialize()
 
 	if(device == GPU)
  		ps->define_device_info();
- 
-
-// 	if(!cforce)
-// 		cforce = new dem_force(this);
-// 	cforce->initialize();
- 
-//  	if(!cdetect)
-//  		cdetect = new cell_grid(this);
-//  	cdetect->setWorldOrigin(0.0, 0.0, 0.0);
-//  	cdetect->setGridSize(128, 128, 128);
-//  	//cdetect->setCellSize(ps->getRadius() * 2);
-//  	cdetect->initialize();
 
 	switch(integrator){
 	case EULER_METHOD: itor[integrator] = new Euler_integrator(this); break;
 	case VELOCITY_VERLET: itor[integrator] = new Verlet_integrator(this); break;
 	}
-	//itor[integrator]->setDt(Simulation::dt);
-	itor[integrator]->setNp(ps->Size());
- 	
 
+	itor[integrator]->setNp(ps->Size());
+ 
 	return true;
 }
 
