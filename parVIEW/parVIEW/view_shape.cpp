@@ -125,7 +125,7 @@ void shape::draw()
 // 		bool pause = true;
 // 	}
 	glRotatef(90, 0, 0, 1);
-	glRotatef(-5, 1, 0, 0);
+	glRotatef(-30, 1, 0, 0);
 	glRotatef(-90, 0, 0, 1);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_LIGHTING);

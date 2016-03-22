@@ -11,15 +11,21 @@ namespace parview
 		plane();
 		virtual ~plane() {}
 		save_plane_info& info_plane() { return spi; }
-		virtual void callDialog() {}
+		virtual bool callDialog(DIALOGTYPE dt = NEW_OBJECT) { return true; }
 		virtual void draw();
-		virtual void define(void* tg = 0);
+		void define(void* tg = 0);
+		virtual void SaveObject(QTextStream& out) {}
 		virtual void saveCurrentData(QFile& pf);
 		virtual void updateDataFromFile(QFile& pf, unsigned int fdtype){}
+		virtual void hertzian_contact_force(void* p, void* v, void* w, void* f, void* m, float ma, float dt, parview::contactConstant* cc){}
 
 	private:
 		save_plane_info spi;
 		unsigned int glList;
+
+		private slots:
+		virtual void Click_ok(){}
+		virtual void Click_cancel(){}
 	};
 }
 

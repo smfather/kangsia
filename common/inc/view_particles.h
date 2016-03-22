@@ -2,6 +2,7 @@
 #define VIEW_PARTICLES_H
 
 #include "Object.h"
+#include "view_controller.h"
 #include <QDialog>
 
 QT_BEGIN_NAMESPACE
@@ -20,27 +21,64 @@ namespace parview
 		Q_OBJECT
 
 	public:
+
+		struct particle{
+			unsigned int id;
+			algebra::vector4<float> pos;
+			algebra::vector4<float> vel;
+			algebra::vector4<float> acc;
+			algebra::vector4<float> omega;
+			algebra::vector4<float> alpha;
+		};
+
 		particles();
 		virtual ~particles();
 
 		void draw_particles();
-		virtual void callDialog();
+		virtual bool callDialog(DIALOGTYPE dt = NEW_OBJECT);
 		virtual void draw();
-		virtual void define(void* tg = 0);
+		bool define(void* tg = 0);
+		virtual void SaveObject(QTextStream& out);
 		virtual void saveCurrentData(QFile& pf);
 		virtual void updateDataFromFile(QFile& pf, unsigned int fdtype);
+		virtual void hertzian_contact_force(void* p, void* v, void* w, void* f, void* m, float ma, float dt, parview::contactConstant* cc){}
 
+		void insert_particle_buffer(float* p, unsigned int n);
 		void alloc_buffer(QFile& pf, unsigned int n);
 		void alloc_buffer_sph(QFile& pf, unsigned int n);
 		void alloc_buffer_dem(QFile& pf, unsigned int n);
+		void SetFromFile(QFile& pf, unsigned int _np = 0);
 		
 		float* getPosition(unsigned int id) { return pos[id]; }
 		float* getVelocity(unsigned int id) { return vel[id]; }
 		QString& Name() { return name; }
 		unsigned int Np() { return np;  }
+		float GetMaxRadius() { return maxRadius; }
 		void bindingWindowHeight(int *height) { winHeight = height; }
-		algebra::vector3<float> getPositionToV3(unsigned int id);
-		algebra::vector3<float> getVelocityToV3(unsigned int id);
+		template<typename base_type>
+		algebra::vector4<base_type> getPositionToV4(unsigned int id)
+		{
+			unsigned int cf = view_controller::getFrame();
+			float* outPos = pos[cf];
+			return algebra::vector4<base_type>(
+				static_cast<base_type>(outPos[id * 4 + 0]),
+				static_cast<base_type>(outPos[id * 4 + 1]),
+				static_cast<base_type>(outPos[id * 4 + 2]),
+				static_cast<base_type>(outPos[id * 4 + 3])
+				);
+		}
+		template<typename base_type>
+		algebra::vector4<base_type> getVelocityToV4(unsigned int id)
+		{
+			unsigned int cf = view_controller::getFrame();
+			float* outVel = vel[cf];
+			return algebra::vector4<base_type>(
+				static_cast<base_type>(outVel[id * 4 + 0]),
+				static_cast<base_type>(outVel[id * 4 + 1]),
+				static_cast<base_type>(outVel[id * 4 + 2]),
+				static_cast<base_type>(outVel[id * 4 + 3])
+				);
+		}
 		double getPressure(unsigned id);
 		double getFreeSurfaceValue(unsigned int id);
 		bool isFreeSurface(unsigned int id);
@@ -63,6 +101,7 @@ namespace parview
 		QString baseGeometry;
 		int *winHeight;
 		unsigned int np;
+		float maxRadius;
 		float radius;
 		float *buffer;
 		float *color_buffer;
@@ -86,18 +125,12 @@ namespace parview
 		QLineEdit *LEName;
 		QLabel *LRadius;
 		QLineEdit *LERadius;
-// 		QLabel *LStartPoint;
-// 		QLineEdit *LEStartPoint;
-// 		QLabel *LEndPoint;
-// 		QLineEdit *LEEndPoint;
 		QGridLayout *particleLayout;
 		QStringList geoComboxList;
-		QPushButton *PBOk;
-		QPushButton *PBCancel;
 		
-	private slots:
-		void Click_ok();
-		void Click_cancel();
+		private slots:
+		virtual void Click_ok();
+		virtual void Click_cancel();
 
 	signals:
 		void mySignal();

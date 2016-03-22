@@ -33,13 +33,13 @@ void particleInfoDialog::updateParticleInfo(unsigned int id)
 {
 	if (id == 0)
 		return;
-	vector3<float> pos = parsys->getPositionToV3(id-1);
+	vector4<float> pos = parsys->getPositionToV4<float>(id-1);
 	QString v3str;
 	v3str.sprintf("%05f, %05f, %05f", pos.x, pos.y, pos.z);
 	ui->LEPosition->setText(v3str);
 	
 	v3str.clear();
-	vector3<float> vel = parsys->getVelocityToV3(id-1);
+	vector4<float> vel = parsys->getVelocityToV4<float>(id - 1);
 	v3str.sprintf("%05f, %05f, %05f", vel.x, vel.y, vel.z);
 	ui->LEVelocity->setText(v3str);
 

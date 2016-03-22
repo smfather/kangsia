@@ -56,7 +56,7 @@ void cube::draw()
 	}
 }
 
-void cube::define(void* tg)
+bool cube::define(void* tg)
 {
 	glList = glGenLists(1);
 	glNewList(glList, GL_COMPILE);
@@ -76,6 +76,7 @@ void cube::define(void* tg)
 	glEndList();
 
 	isDefined = true;
+	return true;
 }
 
 void cube::saveCurrentData(QFile& pf)
@@ -84,7 +85,7 @@ void cube::saveCurrentData(QFile& pf)
 		return;
 }
 
-void cube::callDialog()
+bool cube::callDialog(DIALOGTYPE dt)
 {
 	if (!cubeDialog){
 		cubeDialog = new QDialog;
@@ -118,6 +119,7 @@ void cube::callDialog()
 // 	cubeDialog->show();
 // 	cubeDialog->raise();
 // 	cubeDialog->activateWindow();
+	return isDialogOk ? true : false;
 }
 
 void cube::Click_ok()
@@ -169,11 +171,12 @@ void cube::Click_ok()
 
 	delete cubeDialog;
 	cubeDialog = NULL;
+	isDialogOk = true;
 }
 
 void cube::Click_cancel()
 {
-	LEStartPoint->text().clear();
-	LEEndPoint->text().clear();
-	LEName->text().clear();
+	delete cubeDialog;
+	cubeDialog = NULL;
+	isDialogOk = false;
 }

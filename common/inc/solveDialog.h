@@ -23,7 +23,7 @@ namespace parview
 		solveDialog(GLWidget *gl);
 		~solveDialog();
 
-		void callDialog();
+		bool callDialog();
 
 		float simTime;
 		float timeStep;
@@ -35,11 +35,8 @@ namespace parview
 	private:
 		QDialog *solveDlg;
 
-		QLabel *LCaseName;
-		QLabel *LBasePath;
-		QLabel *LSimTime;
-		QLabel *LTimeStep;
-		QLabel *LSaveStep;
+		QLineEdit *LEWorldOrigin;
+		QLineEdit *LEGridSize;
 		QLineEdit *LECaseName;
 		QLineEdit *LEBasePath;
 		QLineEdit *LESimTime;
@@ -49,7 +46,12 @@ namespace parview
 		QPushButton *PBSolve;
 		QPushButton *PBCancel;
 
+// 		vector3<float> worldOrigin;
+// 		vector3<unsigned int> gridSize;
+
 		GLWidget *GL;
+
+		bool isDialogOk;
 
 	private slots:
 		void Click_Solve();

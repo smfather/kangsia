@@ -13,5 +13,8 @@
         <file>image/pRec.png</file>
         <file>image/particle.png</file>
         <file>image/solve.png</file>
+        <file>image/icLine.png</file>
+        <file>image/icRect.png</file>
+        <file>image/collision.png</file>
     </qresource>
 </RCC>

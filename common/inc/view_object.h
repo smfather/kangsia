@@ -22,11 +22,13 @@ namespace parview
 		void setObjectData(QFile& pf);
 
 		void draw_object();
-		virtual void callDialog() {}
+		virtual bool callDialog(DIALOGTYPE dt = NEW_OBJECT) { return true; }
 		virtual void draw();
-		virtual void define(void* tg = 0);
+		void define(void* tg = 0);
+		virtual void SaveObject(QTextStream& out) {}
 		virtual void saveCurrentData(QFile& pf);
 		virtual void updateDataFromFile(QFile& pf, unsigned int fdtype){}
+		virtual void hertzian_contact_force(void* p, void* v, void* w, void* f, void* m, float ma, float dt, parview::contactConstant* cc){}
 
 	private:
 		algebra::vector<sline> lines;
@@ -36,6 +38,10 @@ namespace parview
 		vector3<float> velocity;
 		//vector3<double> position[MAX_FRAME];
 		GLint glList;
+
+		private slots:
+		virtual void Click_ok(){}
+		virtual void Click_cancel(){}
 	};
 }
 

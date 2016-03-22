@@ -2,7 +2,7 @@
 #define GLWIDGET_H
 
 #include "Object.h"
-
+#include "contactConstant.h"
 #include <QGLWidget>
 #include <QMenu>
 #include <list>
@@ -29,7 +29,10 @@ namespace parview
 		~GLWidget();
 
 		void makeCube();
+		void makeRect();
+		void makeLine();
 		void makeParticle();
+		void defineCollidConst();
 
 		int xRotation() const { return xRot; }
 		int yRotation() const { return yRot; }
@@ -37,6 +40,7 @@ namespace parview
 		float& getZoom() { return zoom; }
 		void setKeyState(bool s, int i) { keyID[i] = s; };
 
+		std::list<parview::contactConstant>* ContactConstants(){ return &cconsts; }
 		void onAnimation() { isAnimation = true; }
 		GLuint makePolygonObject(double* points, double* normals, int* indice, int size);
 		void ExportForceData();
@@ -50,7 +54,9 @@ namespace parview
 		void getFileData(QFile& pf);
 		void getSphFileData(QStringList& fnames);
 		void getDemFileData(QStringList& fnames, bool rt);
+		void OpenFiles(QStringList& fnames);
 		void saveCurrentData(QFile& pf);
+		bool SaveModel(QFile& pf);
 		void UpdateRtDEMData();
 		int getWindowHeight() { return wHeight; }
 		bool is_set_particle() { return isSetParticle; }
@@ -129,6 +135,7 @@ namespace parview
 
 		viewObjectType votype;
 
+		std::list<contactConstant> cconsts;
 		std::map<QString, parview::Object*> objs;
 
 		parview::Object* pview_ptr = NULL;

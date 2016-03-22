@@ -1,6 +1,6 @@
 #include "view_particles.h"
-#include "view_controller.h"
 #include "shader.h"
+#include "colors.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <cmath>
@@ -13,6 +13,7 @@
 #include <QComboBox>
 
 #include "view_cube.h"
+#include "view_line.h"
 
 using namespace parview;
 
@@ -21,15 +22,16 @@ using namespace parview;
 //bool particles::is_play = false;
 
 particles::particles()
-	: Object()
+	: Object(PARTICLES)
 	, np(0)
 	, radius(0)
+	, maxRadius(0)
 	, isSetColor(false)
 	, name("particles")
 	, isDisplaySupportRadius(false)
 	, particleDialog(NULL)
 {
-	Object::type = NO_GEOMETRY_TYPE;
+	//Object::type = NO_GEOMETRY_TYPE;
 	for (int i = 0; i < MAX_FRAME; i++){
 		pos[i] = NULL;
 		vel[i] = NULL;
@@ -124,7 +126,7 @@ void particles::draw()
 	glEnable(GL_DEPTH_TEST);
 	
 	glUseProgram(m_program);
-	glUniform1f(glGetUniformLocation(m_program, "pointScale"), (*winHeight) / tanf(60 * 0.5f*(float)PI / 180.0f));
+	glUniform1f(glGetUniformLocation(m_program, "pointScale"), (*winHeight) / tanf(55 * 0.5f*(float)PI / 180.0f));
 	//glUniform1f(glGetUniformLocation(m_program, "pointRadius"), cur_radius);
 
 	//glColor3f(1, 1, 1);
@@ -162,11 +164,43 @@ void particles::_drawPoints()
 	}
 }
 
-void particles::define(void* tg)
+bool particles::define(void* tg)
 {
-// 	Object *geo = (Object *)tg;
-// 
-// 	switch (geo->Type()){
+ 	Object *geo = (Object *)tg;
+ 
+ 	switch (geo->Type()){
+	case LINE:
+	{
+		parview::line *l = dynamic_cast<line*>(geo);
+		algebra::vector3<float> ep(l->endPoint);
+		algebra::vector3<float> sp(l->startPoint);
+		float len = (ep - sp).length();
+		algebra::vector3<float> t = (ep - sp) / len;
+		unsigned int _np = (int)floor(len / (radius * 2)) + 1;
+		float spacing = (len - (radius * 2) * (_np - 1)) / (_np - 1);
+		if(!pos[0])
+			pos[0] = new float[_np * 4];
+		if(!color[0])
+			color[0] = new float[_np * 4];
+		for (unsigned int i = np, j = 0; j < _np; i++, j++){
+			algebra::vector4<float> p(sp + j*(radius * 2.0f + spacing) * t, radius);
+			pos[0][i * 4 + 0] = p.x;
+			pos[0][i * 4 + 1] = p.y;
+			pos[0][i * 4 + 2] = p.z;
+			pos[0][i * 4 + 3] = p.w;
+			if (maxRadius < p.w)
+				maxRadius = p.w;
+			algebra::vector4<float> clr = colors::GetColor(geo->GetColor());
+			color[0][i * 4 + 0] = clr.x;
+			color[0][i * 4 + 1] = clr.y;
+			color[0][i * 4 + 2] = clr.z;
+			color[0][i * 4 + 3] = clr.w;
+		}
+		np += _np;
+		geo->SetRoll(ROLL_PARTICLE);
+		material = geo->Material();
+		break;
+	}
 // 	case CUBE:
 // 		{
 // 			cube *c = dynamic_cast<cube*>(geo);
@@ -219,7 +253,7 @@ void particles::define(void* tg)
 // 				}
 // 			}
 // 		}
-// 	}
+ 	}
 // 	color[0] = new float[np * 4];
 // 	for (unsigned int i = 0; i < np; i++){
 // 		color[0][i * 4 + 0] = 0.0f;
@@ -227,7 +261,10 @@ void particles::define(void* tg)
 // 		color[0][i * 4 + 2] = 1.0f;
 // 		color[0][i * 4 + 3] = 1.0f;
 // 	}
-
+	if (!np){
+		msgBox("Particle generation is failed.", QMessageBox::Critical);
+		return false;
+	}
 	glewInit();
 
 	m_posVBO = 0;
@@ -274,6 +311,8 @@ void particles::define(void* tg)
 	//glUnmapBufferARB(GL_ARRAY_BUFFER);
 
 	m_program = _compileProgram(vertexShader, spherePixelShader);
+
+	return true;
 }
 
 unsigned int particles::createVBO(unsigned int size, float *bufferData)
@@ -349,9 +388,9 @@ void particles::updateDataFromFile(QFile& pf, unsigned int fdtype)
 			delete[] tmp;
 			for (unsigned int i = 0; i < np; i++){
 				if (isShapeContact[i]){
-					color[0][i * 4 + 0] = 0.0;
+					color[0][i * 4 + 0] = 1.0;
 					color[0][i * 4 + 1] = 1.0;
-					color[0][i * 4 + 2] = 0.0;
+					color[0][i * 4 + 2] = 1.0;
 					color[0][i * 4 + 3] = 1.0;
 				}
 			}
@@ -391,6 +430,31 @@ void particles::updateDataFromFile(QFile& pf, unsigned int fdtype)
 	}
 }
 
+void particles::SetFromFile(QFile& pf, unsigned int _np)
+{
+	np = _np;
+	algebra::vector4<float> *source = new algebra::vector4<float>[np * 5];
+	//particle *p = new particle[np];
+	if (np){
+		pf.read((char*)source, sizeof(algebra::vector4<float>)*np * 5);
+		pos[view_controller::getTotalBuffers()] = new float[np * 4];
+		vel[view_controller::getTotalBuffers()] = new float[np * 4];
+		color[view_controller::getTotalBuffers()] = new float[np * 4];
+		pf.read((char*)pos[view_controller::getTotalBuffers()], sizeof(algebra::vector4<float>)*np);
+		pf.read((char*)vel[view_controller::getTotalBuffers()], sizeof(algebra::vector4<float>)*np);
+		for (unsigned int i = 0; i < np; i++){
+			color[view_controller::getTotalBuffers()][i * 4 + 0] = 0.0f;
+			color[view_controller::getTotalBuffers()][i * 4 + 1] = 0.0f;
+			color[view_controller::getTotalBuffers()][i * 4 + 2] = 1.0f;
+			color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
+		}
+	}
+	else{
+
+	}
+	
+}
+
 void particles::alloc_buffer_dem(QFile& pf, unsigned int fdtype)
 {
 	if (fdtype == 4){
@@ -426,15 +490,15 @@ void particles::alloc_buffer_dem(QFile& pf, unsigned int fdtype)
 				color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
 				break;
 			case BLUE:
-				color[view_controller::getTotalBuffers()][i * 4 + 0] = 0.0f;
-				color[view_controller::getTotalBuffers()][i * 4 + 1] = 0.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 0] = 0.7f;
+				color[view_controller::getTotalBuffers()][i * 4 + 1] = 0.8f;
 				color[view_controller::getTotalBuffers()][i * 4 + 2] = 1.0f;
 				color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
 				break;
 			}
 			if (isShapeContact[i]){
-				color[view_controller::getTotalBuffers()][i * 4 + 0] = 0.0f;
-				color[view_controller::getTotalBuffers()][i * 4 + 1] = 1.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 0] = 1.0f;
+				color[view_controller::getTotalBuffers()][i * 4 + 1] = 0.0f;
 				color[view_controller::getTotalBuffers()][i * 4 + 2] = 0.0f;
 				color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
 			}
@@ -494,8 +558,8 @@ void particles::alloc_buffer_dem(QFile& pf, unsigned int fdtype)
 					break;
 				}
 				if (isShapeContact[i]){
-					color[view_controller::getTotalBuffers()][i * 4 + 0] = 0.0f;
-					color[view_controller::getTotalBuffers()][i * 4 + 1] = 1.0f;
+					color[view_controller::getTotalBuffers()][i * 4 + 0] = 1.0f;
+					color[view_controller::getTotalBuffers()][i * 4 + 1] = 0.0f;
 					color[view_controller::getTotalBuffers()][i * 4 + 2] = 0.0f;
 					color[view_controller::getTotalBuffers()][i * 4 + 3] = 1.0f;
 				}
@@ -634,6 +698,26 @@ void particles::alloc_buffer_sph(QFile& pf, unsigned int n)
 	delete[] ptype;
 }
 
+void particles::insert_particle_buffer(float* p, unsigned int n)
+{
+	view_controller::upBufferCount();
+	if(!pos[view_controller::getTotalBuffers()])
+		pos[view_controller::getTotalBuffers()] = new float[np * 4];
+	if(!vel[view_controller::getTotalBuffers()])
+		vel[view_controller::getTotalBuffers()] = new float[np * 4];
+	if(!color[view_controller::getTotalBuffers()])
+		color[view_controller::getTotalBuffers()] = new float[np * 4];
+	memcpy(pos[view_controller::getTotalBuffers()], p, sizeof(float) * n * 4);
+
+	algebra::vector4<float> clr = colors::GetColor(ctype);
+	for (unsigned int i = 0; i < n; i++){
+		color[view_controller::getTotalBuffers()][i * 4 + 0] = clr.x;
+		color[view_controller::getTotalBuffers()][i * 4 + 1] = clr.y;
+		color[view_controller::getTotalBuffers()][i * 4 + 2] = clr.z;
+		color[view_controller::getTotalBuffers()][i * 4 + 3] = clr.w;
+	}
+}
+
 void particles::alloc_buffer(QFile& pf, unsigned int n)
 {
 	np = n;
@@ -696,31 +780,25 @@ void particles::saveCurrentData(QFile& pf)
 	pf.write((char*)pos[cf], sizeof(float) * np * 4);
 	pf.write((char*)vel[cf], sizeof(float) * np * 4);
 }
+// 
+// algebra::vector4<float> particles::getPositionToV4(unsigned int id)
+// {
+// 	unsigned int cf = view_controller::getFrame();
+// 	float* outPos = pos[cf];
+// 	return algebra::vector4<float>(outPos[id * 4 + 0]
+// 								 , outPos[id * 4 + 1]
+// 								 , outPos[id * 4 + 2]);
+// 	
+// }
 
-algebra::vector3<float> particles::getPositionToV3(unsigned int id)
-{
-	unsigned int cf = view_controller::getFrame();
-	float* outPos = pos[cf];
-	//for (unsigned int i = 0; i < np; i++){
-	//	if (outPos[i * 4 + 1] > 0.6)
-	//	{
-	//		bool pause = true;
-	//	}
-	//}
-	return algebra::vector3<float>(outPos[id * 4 + 0]
-								 , outPos[id * 4 + 1]
-								 , outPos[id * 4 + 2]);
-	
-}
-
-algebra::vector3<float> particles::getVelocityToV3(unsigned int id)
-{
-	unsigned int cf = view_controller::getFrame();
-	float* outVel = vel[cf];
-	return algebra::vector3<float>(outVel[id * 3+ 0]
-		, outVel[id * 3 + 1]
-		, outVel[id * 3 + 2]);
-}
+// algebra::vector4<float> particles::getVelocityToV4(unsigned int id)
+// {
+// 	unsigned int cf = view_controller::getFrame();
+// 	float* outVel = vel[cf];
+// 	return algebra::vector4<float>(outVel[id * 3+ 0]
+// 		, outVel[id * 3 + 1]
+// 		, outVel[id * 3 + 2]);
+// }
 
 double particles::getPressure(unsigned id)
 {
@@ -804,7 +882,7 @@ void particles::AddParticlesFromFile(QFile& pf)
 		m_colorVBO = createVBO(memSize, color_buffer);
 }
 
-void particles::callDialog()
+bool particles::callDialog(DIALOGTYPE dt)
 {
 	if (!particleDialog){
 		particleDialog = new QDialog;
@@ -821,21 +899,15 @@ void particles::callDialog()
 // 		LEndPoint = new QLabel("End point");
 // 		LEEndPoint = new QLineEdit;
 		particleLayout = new QGridLayout;
-		PBOk = new QPushButton("OK");
-		PBCancel = new QPushButton("Cancel");
+		QPushButton* PBOk = new QPushButton("OK");
+		QPushButton* PBCancel = new QPushButton("Cancel");
 		connect(PBOk, SIGNAL(clicked()), this, SLOT(Click_ok()));
 		connect(PBCancel, SIGNAL(clicked()), this, SLOT(Click_cancel()));
 		CBGeometry->addItems(geoComboxList);
-		particleLayout->addWidget(LMaterial, 0, 0);
-		particleLayout->addWidget(CBMaterial, 0, 1, 1, 2);
-		particleLayout->addWidget(LBaseGeometry, 1, 0);
-		particleLayout->addWidget(CBGeometry, 1, 1, 1, 2);
-		particleLayout->addWidget(LName, 2, 0);
-		particleLayout->addWidget(LEName, 2, 1, 1, 2);
-		particleLayout->addWidget(LRadius, 3, 0);
-		particleLayout->addWidget(LERadius, 3, 1, 1, 2);
-		particleLayout->addWidget(PBOk, 4, 0);
-		particleLayout->addWidget(PBCancel, 4, 1);
+		particleLayout->addWidget(LBaseGeometry, 0, 0); particleLayout->addWidget(CBGeometry, 0, 1, 1, 2);
+		particleLayout->addWidget(LName, 1, 0); particleLayout->addWidget(LEName, 1, 1, 1, 2);
+		particleLayout->addWidget(LRadius, 2, 0); particleLayout->addWidget(LERadius, 2, 1, 1, 2);
+		particleLayout->addWidget(PBOk, 3, 0); particleLayout->addWidget(PBCancel, 3, 1);
 // 		particleLayout->addWidget(LStartPoint, 3, 0);
 // 		particleLayout->addWidget(LEStartPoint, 3, 1, 1, 2);
 // 		particleLayout->addWidget(LEndPoint, 4, 0);
@@ -844,15 +916,18 @@ void particles::callDialog()
 	}
 
 	particleDialog->exec();
+	return isDialogOk ? true : false;
 }
 
 void particles::Click_ok()
 {
 	if (LEName->text().isEmpty()){
 		msgBox("Value of name is empty!!", QMessageBox::Critical);
+		return;
 	}
-	else if (LERadius->text().isEmpty()){
+	if (LERadius->text().isEmpty()){
 		msgBox("Value of radius is empty!!", QMessageBox::Critical);
+		return;
 	}
 // 	else if (LEStartPoint->text().isEmpty()){
 // 		msgBox("Value of start point is empty!!", QMessageBox::Critical);
@@ -873,8 +948,8 @@ void particles::Click_ok()
 	baseGeometry = CBGeometry->currentText();
 
 	Object::name = LEName->text();
-	Object::mtype = material_str2enum(CBMaterial->currentText().toStdString());
-	Object::material = getMaterialConstant(mtype);
+	//Object::mtype = material_str2enum(CBMaterial->currentText().toStdString());
+	//Object::material = getMaterialConstant(mtype);
 
 	radius = LERadius->text().toFloat();
 
@@ -892,10 +967,18 @@ void particles::Click_ok()
 
 	delete particleDialog;
 	particleDialog = NULL;
+	isDialogOk = true;
 }
 
 void particles::Click_cancel()
 {
-	LEName->text().clear();
-	LERadius->text().clear();
+	particleDialog->close();
+	delete particleDialog; particleDialog = NULL;
+	isDialogOk = false;
+}
+
+void particles::SaveObject(QTextStream& out)
+{
+// 	out << "OBJECT" << " " << "PARTICLE" << " " << name << "\n";
+// 	out << radius << " " << baseGeometry << "\n";
 }

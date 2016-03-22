@@ -1,103 +1,167 @@
 #include "DEM/DemSimulation.h"
 #include "view_particles.h"
-#include "cu_dem_dec.cuh"
-#include <QtWidgets>
+#include "glwidget.h"
+#include "timer.h"
+#include "view_controller.h"
+#include <cmath>
 
-#include <cuda_runtime.h>
-#include <vector_types.h>
+//#include <QtWidgets>
 
-#include <helper_functions.h>
-#include <helper_cuda.h>
-
-DemSimulation::DemSimulation()
+DemSimulation::DemSimulation(parview::GLWidget *_gl)
+	: gl(_gl), viewPars(NULL)
+	// 		, pos(NULL), vel(NULL), acc(NULL), omega(NULL)
+	// 		, alpha(NULL), force(NULL), moment(NULL)
+	, sorted_id(NULL), cell_id(NULL), body_id(NULL)
+	, cell_start(NULL), cell_end(NULL)
+	, nParticle(0), nShapeNode(0), nGrid(0)
 {
-	pos = vel = omega = force = moment = NULL;
-	d_pos = d_vel = d_omega = d_force = d_moment = NULL;
+	viewPars = dynamic_cast<parview::particles*>(gl->getViewParticle());
+	//Initialize();
 }
 
 DemSimulation::~DemSimulation()
 {
-	if (pos) delete[] pos; pos = NULL;
-	if (vel) delete[] vel; vel = NULL;
-	if (omega) delete[] omega; omega = NULL;
-	if (force) delete[] force; force = NULL;
-	if (moment) delete[] moment; moment = NULL;
-	if (d_pos) cudaFree(d_pos); d_pos = NULL;
-	if (d_vel) cudaFree(d_vel); d_vel = NULL;
-	if (d_omega) cudaFree(d_omega); d_omega = NULL;
-	if (d_force) cudaFree(d_force); d_force = NULL;
-	if (d_moment) cudaFree(d_moment); d_moment = NULL;
+	// 		if (pos) delete[] pos; pos = NULL;
+	// 		if (vel) delete[] vel; vel = NULL;
+	// 		if (acc) delete[] acc; acc = NULL;
+	// 		if (omega) delete[] omega; omega = NULL;
+	// 		if (alpha) delete[] alpha; alpha = NULL;
+	// 		if (force) delete[] force; force = NULL;
+	// 		if (moment) delete[] moment; moment = NULL;
+	if (cell_id) delete[] cell_id; cell_id = NULL;
+	if (body_id) delete[] body_id; body_id = NULL;
+	if (sorted_id) delete[] sorted_id; sorted_id = NULL;
+	if (cell_start) delete[] cell_start; cell_start = NULL;
+	if (cell_end) delete[] cell_end; cell_end = NULL;
 }
 
-bool DemSimulation::Initialize(std::map<QString, parview::Object*>& objs)
+bool DemSimulation::Initialize()
 {
-	unsigned int np = 0;
-	float maxRadius = 0.0f;
-	gridSize[0] = 128; gridSize[1] = 128; gridSize[2] = 128;
-	worldOrigin[0] = 0.0f; worldOrigin[1] = 0.0f; worldOrigin[2] = 0.0f;
-	viewPars = dynamic_cast<parview::particles*>(objs.find("particles")->second);
-	np = viewPars->Np();
-	pos = new float[np * 4];
-	vel = new float[np * 4];
-	omega = new float[np * 4];
-	force = new float[np * 4];
-	moment = new float[np * 4];
-	memcpy(pos, viewPars->getPosition(0), sizeof(float)*np * 4);
-	memset(vel, 0, sizeof(float)*np * 4);
-	memset(omega, 0, sizeof(float)*np * 4);
-	memset(force, 0, sizeof(float)*np * 4);
-	memset(moment, 0, sizeof(float)*np * 4);
-	for (unsigned int i = 0; i < np; i++){
-		force[i * 4 + 3] = viewPars->Material().density * 4.0f * PI * pow(pos[i * 4 + 3], 3) / 3.0f;
-		moment[i * 4 + 3] = 2.0f * force[i * 4 + 3] * pow(pos[i * 4 + 3], 2) / 5.0f;
-		if (maxRadius < pos[i * 4 + 3]){
-			maxRadius = pos[i * 4 + 3];
-		}
-	}
-
-	// CUDA Memory allocation
-	checkCudaErrors(cudaMalloc((void**)&d_pos, sizeof(float)*np * 4));
-	checkCudaErrors(cudaMalloc((void**)&d_vel, sizeof(float)*np * 4));
-	checkCudaErrors(cudaMalloc((void**)&d_omega, sizeof(float)*np * 4));
-	checkCudaErrors(cudaMalloc((void**)&d_force, sizeof(float)*np * 4));
-	checkCudaErrors(cudaMalloc((void**)&d_moment, sizeof(float)*np * 4));
-
-	// Copy the memory from host to device
-	checkCudaErrors(cudaMemcpy(d_pos, pos, sizeof(float)*np * 4, cudaMemcpyHostToDevice));
-	checkCudaErrors(cudaMemcpy(d_vel, vel, sizeof(float)*np * 4, cudaMemcpyHostToDevice));
-	checkCudaErrors(cudaMemcpy(d_omega, omega, sizeof(float)*np * 4, cudaMemcpyHostToDevice));
-	checkCudaErrors(cudaMemcpy(d_force, force, sizeof(float)*np * 4, cudaMemcpyHostToDevice));
-	checkCudaErrors(cudaMemcpy(d_moment, moment, sizeof(float)*np * 4, cudaMemcpyHostToDevice));
-
-// 	device_parameters paras;
-// 	paras.np = np;
-// 	paras.nsp = 0;// cdetect.getNumShapeVertex();
-// 	paras.dt = BaseSimulation::dt;
-// 	paras.half2dt = 0.5*paras.dt*paras.dt;
-// 	paras.gravity = make_float3(BaseSimulation::gravity[0], BaseSimulation::gravity[1], BaseSimulation::gravity[2]);
-// 	paras.cell_size = maxRadius * 2.0f;
-// 	paras.ncell = gridSize[0] * gridSize[1] * gridSize[2];
-// 	paras.grid_size = make_uint3(gridSize[0], gridSize[1], gridSize[2]);
-// 	paras.world_origin = make_float3(worldOrigin[0], worldOrigin[1], worldOrigin[2]);
-// 	//contact_coefficient ppc = cforce.getCoefficient("particle");
-// // 	paras.kn = ppc.kn;
-// // 	paras.vn = ppc.vn;
-// // 	paras.ks = ppc.ks;
-// // 	paras.vs = ppc.vs;
-// // 	paras.mu = ppc.mu;
-// // 	paras.cohesive = force::cohesive;
-// 	setSymbolicParameter(&paras);
-// 	//Dem->cu_integrator_binding_data(Dem->getParticles()->cu_Position(), Dem->getParticles()->cu_Velocity(), Dem->getParticles()->cu_Acceleration(), Dem->getParticles()->cu_AngularVelocity(), Dem->getParticles()->cu_AngularAcceleration(), cforce.cu_Force(), cforce.cu_Moment());
-// // 	for (std::map<Q, geometry*>::iterator Geo = Dem->getGeometries()->begin(); Geo != Dem->getGeometries()->end(); Geo++){
-// // 		if (Geo->second->GeometryUse() != BOUNDARY) continue;
-// // 		Geo->second->define_device_info();
-// // 	}
+	// 		pos = new vector4<float>[viewPars->Np()];
+	// 		vel = new vector4<float>[viewPars->Np()];
+	// 		acc = new vector4<float>[viewPars->Np()];
+	// 		omega = new vector4<float>[viewPars->Np()];
+	// 		alpha = new vector4<float>[viewPars->Np()];
+	// 		force = new vector3<float>[viewPars->Np()];
+	// 		moment = new vector3<float>[viewPars->Np()];
+	// 
+	// 		for (unsigned int i = 0; i < viewPars->Np(); i++){
+	// 			pos[i] = viewPars->getPositionToV4<float>(i);
+	// 			vel[i] = viewPars->getVelocityToV4<float>(i);
+	// 			acc[i].w = viewPars->Material().density * 4.0f * (float)M_PI * pow(pos[i].w, 3) / 3.0f;
+	// 			alpha[i].w = 2.0f * acc[i].w * pow(pos[i].w, 2) / 5.0f;
+	// 		}
+	BaseSimulation::pBar = new QProgressBar;
+	cellSize = viewPars->GetMaxRadius() * 2.0f;
+	worldOrigin = vector3<float>(-1.1, -1.1, -1.1);
+	gridSize = vector3<unsigned int>(128, 128, 128);
+	nGrid = gridSize.x * gridSize.y * gridSize.z;
+	parview::view_controller::setTotalFrame(0);
+	cell_id = new unsigned int[viewPars->Np()]; memset(cell_id, 0, sizeof(unsigned int)*viewPars->Np());
+	body_id = new unsigned int[viewPars->Np()]; memset(body_id, 0, sizeof(unsigned int)*viewPars->Np());
+	sorted_id = new unsigned int[viewPars->Np()]; memset(sorted_id, 0, sizeof(unsigned int)*viewPars->Np());
+	cell_start = new unsigned int[nGrid]; memset(cell_start, 0, sizeof(unsigned int)*nGrid);
+	cell_end = new unsigned int[nGrid]; memset(cell_end, 0, sizeof(unsigned int)*nGrid);
 	return true;
 }
 
+unsigned int DemSimulation::calcGridHash(algebra::vector3<int>& cell3d)
+{
+	algebra::vector3<int> gridPos;
+	gridPos.x = cell3d.x & (gridSize.x - 1);
+	gridPos.y = cell3d.y & (gridSize.y - 1);
+	gridPos.z = cell3d.z & (gridSize.z - 1);
+	return (gridPos.z*gridSize.y) * gridSize.x + (gridPos.y*gridSize.x) + gridPos.x;
+}
+
+void DemSimulation::reorderDataAndFindCellStart(unsigned ID, unsigned begin, unsigned end)
+{
+	cell_start[ID] = begin;
+	cell_end[ID] = end;
+	unsigned dim = 0, bid = 0;
+	for (unsigned i(begin); i < end; i++){
+		sorted_id[i] = body_id[i];
+	}
+}
+
+// void DemSimulation::TimeStep(float dt, bool seq)
+// {
+// 	// 		pos = new vector4<float>[viewPars->Np()];
+// 	// 		vel = new vector4<float>[viewPars->Np()];
+// 	// 		acc = new vector4<float>[viewPars->Np()];
+// 	// 		omega = new vector4<float>[viewPars->Np()];
+// 	// 		alpha = new vector4<float>[viewPars->Np()];
+// 	// 		force = new vector3<float>[viewPars->Np()];
+// 	// 		moment = new vector3<float>[viewPars->Np()];
+// 	// 
+// 	// 		for (unsigned int i = 0; i < viewPars->Np(); i++){
+// 	// 			pos[i] = viewPars->getPositionToV4<float>(i);
+// 	// 			vel[i] = viewPars->getVelocityToV4<float>(i);
+// 	// 			acc[i].w = viewPars->Material().density * 4.0f * (float)M_PI * pow(pos[i].w, 3) / 3.0f;
+// 	// 			alpha[i].w = 2.0f * acc[i].w * pow(pos[i].w, 2) / 5.0f;
+// 	// 		}
+// }
+
 void DemSimulation::CpuRun()
 {
+	algebra::vector4<float> *pos = new algebra::vector4<float>[viewPars->Np()];
+	algebra::vector4<float> *vel = new algebra::vector4<float>[viewPars->Np()];
+	algebra::vector4<float> *acc = new algebra::vector4<float>[viewPars->Np()];
+	algebra::vector4<float> *omega = new algebra::vector4<float>[viewPars->Np()];
+	algebra::vector4<float> *alpha = new algebra::vector4<float>[viewPars->Np()];
+	algebra::vector3<float> *force = new algebra::vector3<float>[viewPars->Np()];
+	algebra::vector3<float> *moment = new algebra::vector3<float>[viewPars->Np()];
 
+	for (unsigned int i = 0; i < viewPars->Np(); i++){
+		pos[i] = viewPars->getPositionToV4<float>(i);
+		//vel[i] = viewPars->getVelocityToV4<float>(i);
+		acc[i].w = viewPars->Material().density * 4.0f * (float)M_PI * pow(pos[i].w, 3) / 3.0f;
+		alpha[i].w = 2.0f * acc[i].w * pow(pos[i].w, 2) / 5.0f;
+		force[i] = acc[i].w*gravity;
+	}
+	itor = VELOCITY_VERLET;
+	unsigned int part = 0;
+	unsigned int cStep = 0;
+	unsigned int eachStep = 0;
+	unsigned int nStep = static_cast<unsigned int>((simTime / dt) + 1);
+	pBar->setMaximum(nStep / saveStep);
+	pBar->setValue(part);
+	parSIM::timer tmer;
+	time_t t;
+	tm date;
+	std::time(&t);
+	localtime_s(&date, &t);
+	float times = cStep * dt;
+	float elapsed_time = 0.f;
+	cStep++;
+	tmer.Start();
+	while (nStep > cStep){
+		times = cStep * dt;
+		TimeStepping<float, true>(pos, vel, acc, omega, alpha, force, moment);
+		
+		ContactDetect(pos);
+		Collision(pos, vel, acc, omega, alpha, force, moment);
+		TimeStepping<float, false>(pos, vel, acc, omega, alpha, force, moment);
+		if (!((cStep) % saveStep)){
+			part++;
+			pBar->setValue(part);
+			time(&t);
+			localtime_s(&date, &t);
+			tmer.Stop();
+			viewPars->insert_particle_buffer(&(pos[0].x), viewPars->Np());
+			eachStep = 0;
+			tmer.Start();
+		}
+		cStep++;
+		eachStep++;
+	}
+	delete[] pos;
+	delete[] vel;
+	delete[] acc;
+	delete[] omega;
+	delete[] alpha;
+	delete[] force;
+	delete[] moment;
 }
 
 void DemSimulation::GpuRun()

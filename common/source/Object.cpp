@@ -16,18 +16,21 @@ Object::Object(geometry_type gt)
 	: ms(NULL)
 	, CBMaterial(NULL)
 	, type(gt)
+	, isHide(false)
 	, isDefined(false)
+	, isDialogOk(false)
+	, roll(ROLL_BOUNDARY)
 {
 	count++;
 	color[0] = colors[count * 4 + 0];
 	color[1] = colors[count * 4 + 1];
 	color[2] = colors[count * 4 + 2];
 	color[3] = colors[count * 4 + 3];
-
+	ctype = (colors::color_type)count;
 	if (!CBMaterial){
 		LMaterial = new QLabel("Material");
 		CBMaterial = new QComboBox;
-		//CBMaterial->addItems(getMaterialList());
+		CBMaterial->addItems(getMaterialList());
 	}
 }
 

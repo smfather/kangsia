@@ -1,6 +1,8 @@
 #ifndef VECTOR4_H
 #define VECTOR4_H
 
+#include "vector3.hpp"
+
 namespace algebra
 {
 	template < typename T >
@@ -10,8 +12,15 @@ namespace algebra
 		vector4() : x(0), y(0), z(0), w(0) {}
 		vector4(T _x, T _y, T _z, T _w) : x(_x), y(_y), z(_z), w(_w) {}
 		vector4(T val) : x(val), y(val), z(val), w(val) {}
+		vector4(vector3<T>& v3, T _w) : x(v3.x), y(v3.y), z(v3.z), w(_w) {}
 		vector4(const vector4& vec4) : x(vec4.x), y(vec4.y), z(vec4.z), w(vec4.w) {}
 		~vector4() {}
+
+		template< typename TF>
+		vector4<TF> To()
+		{
+			return vector4<TF>(static_cast<TF>(x), static_cast<TF>(y), static_cast<TF>(z), static_cast<TF>(w));
+		}
 
 		vector4 operator+ (vector4& v4){
 			return vector4(x + v4.x, y + v4.y, z + v4.z, w + v4.w);
@@ -28,16 +37,17 @@ namespace algebra
 			return *((&x) + id);
 		}
 		void operator+= (vector4& v4){ x += v4.x; y += v4.y; z += v4.z; w += v4.w; }
+		vector3<T> toVector3() { return vector3<T>(x, y, z); }
 
 	public:
 		T x, y, z, w;
 	};
 
-	template< typename T1 >
-		vector4<double> operator* (T1 sv, vector4<double> vv){
-			vector4<double> v4(sv * vv.x, sv * vv.y, sv * vv.z, sv * vv.w);
-			return v4;
-	}
+// 	template< typename T1 >
+// 		vector4<double> operator* (T1 sv, vector4<double> vv){
+// 			vector4<double> v4(sv * vv.x, sv * vv.y, sv * vv.z, sv * vv.w);
+// 			return v4;
+// 	}
 // 	template < typename T >
 // 	vector4<T> operator* (T sv, vector4<T>& vv){
 // 		return vector4<T>(sv * vv.x, sv * vv.y, sv * vv.z, sv * vv.w);

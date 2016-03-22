@@ -25,7 +25,7 @@ public:
 	~contactCoefficientTable();
 
 	void setTable(std::map<parview::Object*, parview::Object*>& pcont);
-	std::map<QString, contactConstant>& ContactConstants() { return cconsts; }
+	std::map<QString, ccontactConstant>& ContactConstants() { return cconsts; }
 
 	private slots:
 	void Click_Ok();
@@ -37,7 +37,7 @@ private:
 	QPushButton *PBOk;
 	QPushButton *PBCancel;
 	
-	std::map<QString, contactConstant> cconsts;
+	std::map<QString, ccontactConstant> cconsts;
 };
 
 #endif

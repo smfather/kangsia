@@ -19,7 +19,7 @@ typedef unsigned short word;
 
 using namespace algebra;
 
-inline double frand() { return rand() / (double)RAND_MAX; }
+inline float frand() { return rand() / (float)RAND_MAX; }
 inline float ffrand() { return rand() / (float)RAND_MAX; }
 
 template <typename base_type>

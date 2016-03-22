@@ -54,7 +54,7 @@ void contactCoefficientTable::setTable(std::map<parview::Object*, parview::Objec
 
 void contactCoefficientTable::Click_Ok()
 {
-	contactConstant cc;
+	ccontactConstant cc;
 	QTableWidgetItem *item;
 	for (int i = 0; i < cctable->rowCount(); i++){
 		item = cctable->item(i, 2); cc.friction = item->text().toDouble();

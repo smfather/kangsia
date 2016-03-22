@@ -12,9 +12,16 @@ namespace algebra
 		vector3() : x(0), y(0), z(0) {}
 		vector3(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {}
 		vector3(T val) : x(val), y(val), z(val) {}
+		vector3(T *ptr) : x(ptr[0]), y(ptr[1]), z(ptr[2]) {}
 		vector3(const vector3& vec3) : x(vec3.x), y(vec3.y), z(vec3.z) {}
 		vector3(const vector2<T>& vec2) : x(vec2.x), y(vec2.y), z(0) {}
 		~vector3() {}
+
+		template< typename TF>
+		vector3<TF> To()
+		{
+			return vector3<TF>(static_cast<TF>(x), static_cast<TF>(y), static_cast<TF>(z));
+		}
 
 		void zeros() { x = 0; y = 0; z = 0; }
 		T length() { return sqrt(x*x + y*y + z*z); }

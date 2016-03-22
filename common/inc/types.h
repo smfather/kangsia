@@ -12,7 +12,7 @@
 #ifndef MAX
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
-
+#define MAX_FRAME	2000
 // #define POINTER(a) &a(0)
 // #define POINTER3(a) &(a.x)
 // #define POINTER4(a) &a.x
@@ -27,6 +27,7 @@ enum geometry_type
 	LINE = 2,
 	SPHERE = 3,
 	SHAPE = 5,
+	PARTICLES = 6,
 	RECTANGLE = 7,
 	OBJECT
 };
@@ -130,7 +131,7 @@ struct cmaterialType
 	double poisson;
 };
 
-struct contactConstant
+struct ccontactConstant
 {
 	double restitution;
 	double friction;
@@ -201,6 +202,11 @@ typedef struct
 	fileFormat _fmt;
 }output_info;
 
+/*template <typename T>*/
+struct contact_coefficient_t
+{
+	float kn, vn, ks, vs, mu;
+};
 struct contact_coefficient
 {
 	double kn, vn, ks, vs, mu;
@@ -220,6 +226,9 @@ inline material_type material_str2enum(std::string str)
 	}
 	else if(str == "steel"){
 		mt = STEEL;
+	}
+	else if (str == "polyethylene"){
+		mt = POLYETHYLENE;
 	}
 	else if(str == "no_material"){
 		mt = NO_MATERIAL;
@@ -243,6 +252,7 @@ inline cmaterialType getMaterialConstant(int mt)
 	switch (mt){
 	case STEEL: cmt.density = STEEL_DENSITY; cmt.youngs = STEEL_YOUNGS_MODULUS; cmt.poisson = STEEL_POISSON_RATIO; break;
 	case ACRYLIC: cmt.density = ACRYLIC_DENSITY; cmt.youngs = ACRYLIC_YOUNG_MODULUS; cmt.poisson = ACRYLIC_POISSON_RATIO; break;
+	case POLYETHYLENE: cmt.density = POLYETHYLENE_DENSITY; cmt.youngs = POLYETHYLENE_YOUNGS_MODULUS; cmt.poisson = ACRYLIC_POISSON_RATIO; break;
 	}
 
 	return cmt;

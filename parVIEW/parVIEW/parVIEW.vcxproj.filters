@@ -149,15 +149,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_solveDialog.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\common\source\DEM\DemSimulation.cpp">
-      <Filter>Source Files\Simulation</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_DemSimulation.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_DemSimulation.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\common\source\contactCoefficientTable.cpp">
       <Filter>Source Files\Table</Filter>
     </ClCompile>
@@ -165,6 +156,27 @@
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_contactCoefficientTable.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_contactConstant.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_contactConstant.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\contactConstant.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\DEM\DemSimulation.cpp">
+      <Filter>Source Files\Simulation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\BaseSimulation.cpp">
+      <Filter>Source Files\Simulation</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_BaseSimulation.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_BaseSimulation.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
@@ -196,14 +208,17 @@
     <CustomBuild Include="..\..\common\inc\solveDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\common\inc\BaseSimulation.hpp">
+    <CustomBuild Include="..\..\common\inc\contactCoefficientTable.h">
+      <Filter>Header Files\Table</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\common\inc\contactConstant.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\common\inc\BaseSimulation.h">
       <Filter>Header Files\Simulation</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\common\inc\DEM\DemSimulation.h">
       <Filter>Header Files\Simulation</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\common\inc\contactCoefficientTable.h">
-      <Filter>Header Files\Table</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -251,6 +266,12 @@
     </ClInclude>
     <ClInclude Include="..\..\common\inc\cu_dem_impl.cuh">
       <Filter>Header Files\CUDA</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\colors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\timer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

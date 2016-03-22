@@ -20,16 +20,21 @@ namespace parview
 		virtual ~bondData();
 
 		void setBondData(QFile& pf);
-
-		virtual void callDialog() {}
+		virtual void SaveObject(QTextStream& out) {}
+		virtual bool callDialog(DIALOGTYPE dt = NEW_OBJECT) { return true; }
 		virtual void draw();
-		virtual void define(void* tg = 0);
+		void define(void* tg = 0);
 		virtual void saveCurrentData(QFile& pf);
 		virtual void updateDataFromFile(QFile& pf, unsigned int fdtype){}
+		virtual void hertzian_contact_force(void* p, void* v, void* w, void* f, void* m, float ma, float dt, parview::contactConstant* cc){}
 		bond_data *bds;
 		unsigned int size;
 
 		unsigned int glList;
+
+		private slots:
+		virtual void Click_ok(){}
+		virtual void Click_cancel(){}
 	};
 }
 

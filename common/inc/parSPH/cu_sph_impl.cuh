@@ -1273,7 +1273,6 @@ __global__ void updateBodyInformation_kernel(t_particle* type, double3 *pos, dou
 		return;
 
 	double3 newVel = vel[id] + cte.dt * (bforce[0] / cte.bmass + cte.gravity);
-	vel[id]
 	pos[id] += 0.5 * cte.dt * (newVel + vel[id]);
 	if(id == 8728){
 		for(int i = 0; i < 4; i++){

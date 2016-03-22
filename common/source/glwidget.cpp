@@ -58,15 +58,15 @@ GLWidget::GLWidget(/*document* _Doc,*/ QWidget *parent)
 {
 	
 	viewOption = 0;
-	xRot = 1440;// 0;
-	yRot = 1440;// 0;
+	xRot =  0;
+	yRot =  0;
 	zRot = 0;
 	unit = 1;
-	zoom = -0.72;// -1.0;
+	zoom =  -1.0;
 	//zoom = -6.16199875;
-	trans_x = -0.11;// 0;
+	trans_x =  0;
 	moveScale = 0.01f;
-	trans_y = -0.254;// 0;
+	trans_y =  0;
 	IconScale = 0.1;
 	isSetParticle = false;
 	//particle_ptr = NULL;
@@ -464,7 +464,8 @@ void GLWidget::paintGL()
 	for (std::map<QString, parview::Object*>::iterator obj = objs.begin(); obj != objs.end(); obj++){
 		if (viewOption == 2 && obj->second->Type() != NO_GEOMETRY_TYPE)
 			continue;
-		obj->second->draw();
+		if(!obj->second->Hide())
+			obj->second->draw();
 	}
 
 	/*glRotated(xRot / 16.0, 1.0, 0.0, 0.0);
@@ -475,8 +476,8 @@ void GLWidget::paintGL()
 
 	if (view_controller::Play()){
 		view_controller::move2forward1x();
-		if (isRtOpenFile)
-			UpdateRtDEMData();
+// 		if (isRtOpenFile)
+// 			UpdateRtDEMData();
 	}
 
 	
@@ -1117,23 +1118,321 @@ void GLWidget::ExportForceData()
 void GLWidget::makeCube()
 {
 	parview::cube *c = new parview::cube;
-	c->callDialog();
-	c->define();
-	objs[c->Name()] = c;
+	if (c->callDialog()){
+		if (c->define())
+			objs[c->Name()] = c;
+		else
+			delete c;
+	}
+	else
+		delete c;
+
+}
+
+void GLWidget::makeRect()
+{
+	parview::rectangle *r = new parview::rectangle;
+	if (r->callDialog()){
+		if (r->define())
+			objs[r->Name()] = r;
+		else
+			delete r;
+	}
+	else
+		delete r;
+}
+
+void GLWidget::makeLine()
+{
+	parview::line *l = new parview::line;
+	if (l->callDialog()){
+		if (l->define())
+			objs[l->Name()] = l;
+		else
+			delete l;
+	}
+	else
+		delete l;
 }
 
 void GLWidget::makeParticle()
 {
 	parview::particles *p = new parview::particles;
 	QStringList stList;
+	if (!objs.size())
+	{
+		parview::Object::msgBox("There is no geometry to make the particles.", QMessageBox::Critical);
+		return;
+	}
 	std::map<QString, Object*>::iterator obj = objs.begin();
 	for (; obj != objs.end(); obj++){
 		stList.push_back(obj->second->Name());
 	}
 	p->GeometryCombeBoxWidgetList(stList);
-	p->callDialog();
-	p->bindingWindowHeight(&wHeight);
-	obj = objs.find(p->BaseGeometryText());
-	p->define(obj->second);
-	objs[p->Name()] = p;
+	if (p->callDialog()){
+		p->bindingWindowHeight(&wHeight);
+		obj = objs.find(p->BaseGeometryText());
+		if (p->define(obj->second)){
+			objs[p->Name()] = p;
+			obj->second->SetHide(true);
+			pview_ptr = p;
+			isSetParticle = true;
+		}
+		else
+			delete p;
+	}
+	else{
+		delete p;
+	}
+}
+
+void GLWidget::defineCollidConst()
+{
+	
+	QStringList stList;
+	if (!objs.size())
+	{
+		parview::Object::msgBox("There is no geometry to make the particles.", QMessageBox::Critical);
+		return;
+	}
+	std::map<QString, Object*>::iterator obj = objs.begin();
+	for (; obj != objs.end(); obj++){
+		//if(obj->second->Roll() != Object::ROLL_PARTICLE)
+		stList.push_back(obj->second->Name());
+	}
+	contactConstant cc;
+	if (cc.callDialog(stList)){
+		cc.obj_i = objs.find(cc.obj_si)->second;
+		cc.obj_j = objs.find(cc.obj_sj)->second;
+		cconsts.push_back(cc);
+	}
+}
+
+void GLWidget::OpenFiles(QStringList& fnames)
+{
+	QString ch;
+	parview::particles* par = NULL;
+	for (QList<QString>::iterator it = fnames.begin(); it != fnames.end(); it++){
+		int begin = it->lastIndexOf("/");
+		int end = it->length();
+		std::string fname = it->toStdString().substr(begin + 1, end - 1);
+		begin = fname.find_last_of(".");
+		std::string ext = fname.substr(begin, fname.length());
+		if (ext == ".txt"){
+			QFile pf(*it);
+			pf.open(QIODevice::ReadOnly | QIODevice::Text);
+			QTextStream in(&pf);
+			in >> ch;
+			if (ch != "CodeDyn_SaveFile")
+				return;
+			while (!in.atEnd()){
+				in >> ch;
+				if (ch == "GEO_LINE"){
+					int id, roll; in >> id >> roll;
+					if (roll == 2) continue;
+				}
+				else if (ch == "GEO_PLANE"){
+					int id, roll; in >> id >> roll;
+					if (roll == 2) break;
+					parview::rectangle* rect = new parview::rectangle;
+					rect->SetFromFile(in);
+					rect->define();
+					objs[rect->Name()] = rect;
+				}
+				else if (ch == "PARTICLE_SYSTEM"){
+					unsigned int np;
+					float rad;
+					in >> np >> rad >> ch;
+					QFile parf(ch);
+					parf.open(QIODevice::ReadOnly);
+					if (!par)
+						 par = new parview::particles;
+					par->SetFromFile(parf, np);
+				}
+			}
+		}
+	}
+	if (par && !isSetParticle){
+		par->bindingWindowHeight(&wHeight);
+		par->define();
+		objs["particles"] = par;
+		isSetParticle = true;
+		pview_ptr = par;
+	}
+// 		if (fname == "boundary.bin"){
+// 			QFile pf(*it);
+// 			pf.open(QIODevice::ReadOnly);
+// 			pf.read((char*)&fdtype, sizeof(unsigned int));
+// 			while (1){
+// 				pf.read((char*)&type, sizeof(int));
+// 				if (type == INT_MIN)
+// 					break;
+// 				switch (type)
+// 				{
+// 				case LINE:
+// 				{
+// 					parview::line* line = new parview::line;
+// 					line->setLineData(pf);
+// 					line->define();
+// 					objs[line->Name()] = line;
+// 				}
+// 				break;
+// 				case RECTANGLE:
+// 				{
+// 					parview::rectangle* rect = new parview::rectangle;
+// 					rect->setRectangleData(pf, fdtype);
+// 					rect->define();
+// 					objs[rect->Name()] = rect;
+// 					break;
+// 				}
+// 				case CUBE:
+// 				{
+// 					QString name;
+// 					char nm[256] = { 0, };
+// 					int name_size = 0;
+// 					pf.read((char*)&name_size, sizeof(int));
+// 					pf.read((char*)nm, sizeof(char)*name_size);
+// 					name.sprintf("%s", nm);
+// 					parview::cube* c = new parview::cube;
+// 					c->setType(CUBE);
+// 					c->setName(name);
+// 					if (fdtype == 4){
+// 						save_cube_info_f sci;
+// 						float vertice[24] = { 0, };
+// 						pf.read((char*)&sci, sizeof(save_cube_info_f));
+// 						c->origin[0] = sci.px; c->origin[1] = sci.py; c->origin[2] = sci.pz;
+// 						c->width = sci.sx; c->height = sci.sy; c->depth = sci.sz;
+// 						pf.read((char*)vertice, sizeof(float) * 3 * 8);
+// 						for (int i = 0; i < 24; i++){
+// 							c->vertice[i] = vertice[i];
+// 						}
+// 					}
+// 					else{
+// 						save_cube_info sci;
+// 
+// 						double vertice[24] = { 0, };
+// 						pf.read((char*)&sci, sizeof(save_cube_info));
+// 						c->origin[0] = (float)sci.px; c->origin[1] = (float)sci.py; c->origin[2] = (float)sci.pz;
+// 						c->width = (float)sci.sx; c->height = (float)sci.sy; c->depth = (float)sci.sz;
+// 						pf.read((char*)vertice, sizeof(double) * 3 * 8);
+// 						for (int i = 0; i < 24; i++){
+// 							c->vertice[i] = (float)vertice[i];
+// 						}
+// 					}
+// 					c->define();
+// 					objs[name] = c;
+// 				}
+// 				break;
+// 				case SHAPE:
+// 				{
+// 					parview::shape* sh = new parview::shape;
+// 
+// 					sh->setShapeData(pf, fdtype);
+// 
+// 					sh->define();
+// 					objs[sh->Name()] = sh;
+// 				}
+// 				break;
+// 				case OBJECT:
+// 				{
+// 					parview::object* obj = new parview::object;
+// 					obj->setObjectData(pf);
+// 					obj->define();
+// 					objs[obj->Name()] = obj;
+// 				}
+// 				break;
+// 				case MASS:
+// 				{
+// 					QString name;
+// 					int name_size = 0;
+// 					char nm[256] = { 0, };
+// 					pf.read((char*)&name_size, sizeof(int));
+// 					pf.read((char*)nm, sizeof(char)*name_size);
+// 					name.sprintf("%s", nm);
+// 					std::map<QString, Object*>::iterator obj = objs.find(name);
+// 					if (obj != objs.end()){
+// 						//parview::mass *m = obj->second->Mass_ptr();
+// 						if (!obj->second->Mass_ptr())
+// 							obj->second->allocMass();
+// 
+// 						obj->second->Mass_ptr()->setMassData(pf);
+// 					}
+// 				}
+// 				break;
+// 				}
+// 			}
+// 			pf.close();
+// 		}
+// 		else{
+// 			if (!par)
+// 				par = new parview::particles;
+// 			QFile pf(*it);
+// 			pf.open(QIODevice::ReadOnly);
+// 			pf.read((char*)&fdtype, sizeof(unsigned int));
+// 			par->alloc_buffer_dem(pf, fdtype);
+// 			pf.read((char*)&type, sizeof(int));
+// 			if (type == MASS){
+// 				QString name;
+// 				int name_size = 0;
+// 				char nm[256] = { 0, };
+// 				pf.read((char*)&name_size, sizeof(int));
+// 				pf.read((char*)nm, sizeof(char)*name_size);
+// 				name.sprintf("%s", nm);
+// 				std::map<QString, Object*>::iterator obj = objs.find(name);
+// 				if (obj != objs.end()){
+// 					//parview::mass *m = obj->second->Mass_ptr();
+// 					if (!obj->second->Mass_ptr())
+// 						obj->second->allocMass();
+// 
+// 					obj->second->Mass_ptr()->setMassData(pf);
+// 				}
+// 			}
+// 			/*if (type == OBJECT){
+// 			QString name;
+// 			int name_size = 0;
+// 			char nm[256] = { 0, };
+// 			pf.read((char*)&name_size, sizeof(int));
+// 			pf.read((char*)nm, sizeof(char)*name_size);
+// 			name.sprintf("%s", nm);
+// 			std::map<QString, Object*>::iterator obj = objs.find(name);
+// 			if (obj != objs.end()){
+// 			obj->AppendPosition(pf);
+// 			}
+// 			}*/
+// 			pf.close();
+// 			if (rt){
+// 				view_controller::setTotalFrame(fnames.size() - 1);
+// 				break;
+// 			}
+// 			else{
+// 				view_controller::upBufferCount();
+// 			}
+// 		}
+// 	}
+// 	if (par && !isSetParticle){
+// 		par->bindingWindowHeight(&wHeight);
+// 		par->define();
+// 		objs["particles"] = par;
+// 		isSetParticle = true;
+// 		pview_ptr = par;
+// 	}
+}
+
+bool GLWidget::SaveModel(QFile& file)
+{
+	QTextStream out(&file);
+	out << "PARVIEW_VERSION_1_0\n";
+	if (objs.size())
+	{
+		for (std::map<QString, Object*>::iterator obj = objs.begin(); obj != objs.end(); obj++){
+			obj->second->SaveObject(out);
+		}
+	}
+	if (cconsts.size())
+	{
+		for (std::list<contactConstant>::iterator cc = cconsts.begin(); cc != cconsts.end(); cc++){
+			cc->SaveConstant(out);
+		}
+	}
+	return true;
 }

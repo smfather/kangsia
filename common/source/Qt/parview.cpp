@@ -39,13 +39,21 @@ parVIEW::parVIEW(QWidget *parent)
 	pinfoAct->setStatusTip(tr("Particle info dialog"));
 	connect(pinfoAct, SIGNAL(triggered()), this, SLOT(openPinfoDialog()));
 
-	makeCubeAct = new QAction(QIcon(":/image/pRec.png"), tr("&Create Cube Object"), this);
-	makeCubeAct->setStatusTip(tr("Create Cube Object"));
-	connect(makeCubeAct, SIGNAL(triggered()), this, SLOT(makeCube()));
+	makeRectAct = new QAction(QIcon(":/image/icRect.png"), tr("&Create Rectangle Object"), this);
+	makeRectAct->setStatusTip(tr("Create Rectangle Object"));
+	connect(makeRectAct, SIGNAL(triggered()), this, SLOT(makeRect()));
+
+	makeLineAct = new QAction(QIcon(":/image/icLine.png"), tr("&Create Line Object"), this);
+	makeLineAct->setStatusTip(tr("Create Line Object"));
+	connect(makeLineAct, SIGNAL(triggered()), this, SLOT(makeLine()));
 
 	makeParticleAct = new QAction(QIcon(":/image/particle.png"), tr("&Create particles"), this);
 	makeParticleAct->setStatusTip(tr("Create particles"));
 	connect(makeParticleAct, SIGNAL(triggered()), this, SLOT(makeParticle()));
+
+	collidConstAct = new QAction(QIcon(":/image/collision.png"), tr("&Define contact constant"), this);
+	collidConstAct->setStatusTip(tr("Define contact constant"));
+	connect(collidConstAct, SIGNAL(triggered()), this, SLOT(collidConst()));
 
 	solveProcessAct = new QAction(QIcon(":/image/solve.png"), tr("&Solve the model"), this);
 	solveProcessAct->setStatusTip(tr("Solve the model"));
@@ -59,8 +67,10 @@ parVIEW::parVIEW(QWidget *parent)
 	ui.mainToolBar->addAction(openRtAct);
 	ui.mainToolBar->addAction(saveAct);
 	ui.mainToolBar->addAction(pinfoAct);
-	ui.mainToolBar->addAction(makeCubeAct);
+	ui.mainToolBar->addAction(makeRectAct);
+	ui.mainToolBar->addAction(makeLineAct);
 	ui.mainToolBar->addAction(makeParticleAct);
+	ui.mainToolBar->addAction(collidConstAct);
 	ui.mainToolBar->addAction(solveProcessAct);
 
 	viewObjectComboBox = new QComboBox;
@@ -163,34 +173,53 @@ void parVIEW::openrtproj()
 	view_controller::setRealTimeParameter(true);
 }
 
+// CODEDYN
 void parVIEW::openproj()
 {
 	QString dir = "C:/";
-	//QString dir_name = QFileDialog::getOpenDirectoryName(this, tr("open"), dir);
 	QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("open"), dir);
-
-	//QString fileNames = QFileDialog::getOpenFileName(this, tr("open"), dir);
 	if (fileNames.isEmpty())
 		return;
+	if (fileNames.size() == 1){
+		QString file = fileNames.at(0);
+		int begin = file.lastIndexOf(".");
+		QString ext = file.mid(begin);
+		if (ext == "txt"){
 
-	//gl->getSphFileData(fileNames);
-	gl->getDemFileData(fileNames, false);
-	//QFile file(fileNames);
-	//if (file.open(QIODevice::ReadOnly)){
-	//	gl->getFileData(file);
-	//	//gl->getSphFileData(file);
-	//}
-	//file.close();
-
-	QString tf;
-	tf.sprintf("/ %d", view_controller::getTotalBuffers() - 1);
-	Lframe->setText(tf);
-	HSlider->setMaximum(view_controller::getTotalBuffers() - 1);
-	//particle_ptr = gl->getParticle_ptr();
-	if (gl->getParticle_ptr()){
-		connect(gl->getParticle_ptr(), SIGNAL( mySignal() ), this, SLOT(mySlot()));
+		}
 	}
+	gl->OpenFiles(fileNames);
 }
+
+// BEFORE CODEDYN
+// void parVIEW::openproj()
+// {
+// 	QString dir = "C:/";
+// 	//QString dir_name = QFileDialog::getOpenDirectoryName(this, tr("open"), dir);
+// 	QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("open"), dir);
+// 
+// 	//QString fileNames = QFileDialog::getOpenFileName(this, tr("open"), dir);
+// 	if (fileNames.isEmpty())
+// 		return;
+// 
+// 	//gl->getSphFileData(fileNames);
+// 	gl->getDemFileData(fileNames, false);
+// 	//QFile file(fileNames);
+// 	//if (file.open(QIODevice::ReadOnly)){
+// 	//	gl->getFileData(file);
+// 	//	//gl->getSphFileData(file);
+// 	//}
+// 	//file.close();
+// 
+// 	QString tf;
+// 	tf.sprintf("/ %d", view_controller::getTotalBuffers() - 1);
+// 	Lframe->setText(tf);
+// 	HSlider->setMaximum(view_controller::getTotalBuffers() - 1);
+// 	//particle_ptr = gl->getParticle_ptr();
+// 	if (gl->getParticle_ptr()){
+// 		connect(gl->getParticle_ptr(), SIGNAL( mySignal() ), this, SLOT(mySlot()));
+// 	}
+// }
 
 void parVIEW::saveproj()
 {
@@ -200,7 +229,7 @@ void parVIEW::saveproj()
 		return;
 	QFile file(fileName);
 	if (file.open(QIODevice::WriteOnly)){
-		gl->saveCurrentData(file);
+		gl->SaveModel(file);
 	}
 	file.close();
 }
@@ -344,16 +373,31 @@ void parVIEW::makeCube()
 	gl->makeCube();
 }
 
+void parVIEW::makeRect()
+{
+	gl->makeRect();
+}
+
+void parVIEW::makeLine()
+{
+	gl->makeLine();
+}
+
 void parVIEW::makeParticle()
 {
 	gl->makeParticle();
+}
+
+void parVIEW::collidConst()
+{
+	gl->defineCollidConst();
 }
 
 void parVIEW::solveProcess()
 {
 	QMessageBox msgBox;
 	if (!dem){
-		dem = new DemSimulation;
+		dem = new DemSimulation(gl);
 	}
 	std::map<QString, parview::Object*>::iterator itp = gl->Objects().find("particles");
 	parview::particles *viewPars = dynamic_cast<parview::particles*>(itp->second);
@@ -374,18 +418,25 @@ void parVIEW::solveProcess()
 		}
 	}
 
-	contactCoefficientTable cct;
-	cct.setTable(dem->PairContact());
-	cct.exec();
+// 	contactCoefficientTable cct;
+// 	cct.setTable(dem->PairContact());
+// 	cct.exec();
 
-	dem->ContactConstants() = cct.ContactConstants();
-
+	dem->ContactConstants(gl->ContactConstants());
 	solveDialog solDlg(gl);
-	solDlg.callDialog();
+	if (solDlg.callDialog()){
+		//connect(dem, SIGNAL(mySignal(int)), this, SLOT(mySlot(int)));
+		dem->SimulationTime() = solDlg.simTime;
+		dem->SaveStep() = solDlg.saveTime;
+		dem->TimeStep() = solDlg.timeStep;
 
-	dem->SimulationTime() = solDlg.simTime;
-	dem->SaveStep() = solDlg.saveTime;
-	dem->TimeStep() = solDlg.timeStep;
-
-	dem->Initialize(gl->Objects());
+		if (dem->Initialize(/*gl->Objects()*/)){
+			ui.statusBar->addWidget(dem->GetProgressBar());
+			dem->CpuRun();
+		}
+		ui.statusBar->removeWidget(dem->GetProgressBar());
+	}
+	
+	delete dem;
 }
+
