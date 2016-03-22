@@ -64,3 +64,5 @@ parVIEW/
 *.pdb
 *.sdf
 *.suo
+parVIEW/parVIEW/Debug/
+*.obj
