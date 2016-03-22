@@ -59,7 +59,6 @@ parVIEW::parVIEW(QWidget *parent)
 	solveProcessAct->setStatusTip(tr("Solve the model"));
 	connect(solveProcessAct, SIGNAL(triggered()), this, SLOT(solveProcess()));
 
-	//enuChangeShapeAct = new QAction(tr("&Change shape"), this);
 	connect(ui.actionChange_Shape, SIGNAL(triggered()), this, SLOT(ChangeShape()));
 
 	ui.mainToolBar->addAction(newAct);

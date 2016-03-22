@@ -57,8 +57,10 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-*.obj
+parVIEW/
 *.tlog
 *.log
 *.ilk
 *.pdb
+*.sdf
+*.suo
