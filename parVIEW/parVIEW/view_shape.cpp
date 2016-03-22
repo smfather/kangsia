@@ -120,10 +120,6 @@ void shape::draw()
 		p = &(position.x);
 	}
 	glTranslatef(p[0], p[1], p[2]);
-// 	if (p[1] <= 0.03574f)
-// 	{
-// 		bool pause = true;
-// 	}
 	glRotatef(90, 0, 0, 1);
 	glRotatef(-30, 1, 0, 0);
 	glRotatef(-90, 0, 0, 1);
