@@ -1,4 +1,4 @@
-﻿빌드 시작: 2016-03-22 오후 4:29:35
+﻿빌드 시작: 2016-03-22 오후 4:32:14
      1>2 노드의 "C:\C++\kangsia\parVIEW\parVIEW\parVIEW.vcxproj" 프로젝트(Build 대상)입니다.
      1>CudaBuild:
          Skipping CUDA source file ..\..\common\source\cu_dem_def.cu (excluded from build).
@@ -43,4 +43,4 @@
 
 빌드했습니다.
 
-경과 시간: 00:00:04.41
+경과 시간: 00:00:04.00
