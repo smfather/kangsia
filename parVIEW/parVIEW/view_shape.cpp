@@ -143,11 +143,6 @@ void shape::draw()
 
 void shape::draw_shape()
 {
-	/*glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glEnable(GL_LIGHTING);*/
-	
-	//glEnable(GL_COLOR_MATERIAL);
-
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_VERTEX_ARRAY);
 
