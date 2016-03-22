@@ -52,42 +52,10 @@ particles::~particles()
 		if (pressure[i]) delete[] pressure[i]; pressure[i] = NULL;
 		if (color[i]) delete[] color[i]; color[i] = NULL;
 	}
+
+	glDeleteProgram(m_program);
 }
 
-//bool particles::is_end_frame()
-//{
-//	return current_frame == buffer_count;
-//}
-//
-//void particles::move2previous2x()
-//{
-//	current_frame ? (--current_frame ? --current_frame : current_frame = 0) : current_frame = 0;
-//}
-//
-//void particles::move2previous1x()
-//{
-//	current_frame ? --current_frame : current_frame = 0;
-//}
-//
-//void particles::on_play()
-//{
-//	is_play = true;
-//}
-//
-//void particles::off_play()
-//{
-//	is_play = false;
-//}
-//
-//void particles::move2forward1x()
-//{
-//	current_frame == buffer_count ? current_frame = current_frame : ++current_frame;
-//}
-//
-//void particles::move2forward2x()
-//{
-//	current_frame == buffer_count ? current_frame = current_frame : (++current_frame == buffer_count ? current_frame = current_frame : ++current_frame);
-//}
 void particles::draw_particles()
 {
 	/*if (view_controller::Play())
@@ -979,6 +947,11 @@ void particles::Click_cancel()
 
 void particles::SaveObject(QTextStream& out)
 {
-// 	out << "OBJECT" << " " << "PARTICLE" << " " << name << "\n";
-// 	out << radius << " " << baseGeometry << "\n";
+ 	out << "OBJECT" << " " << "PARTICLES" << " " << name << "\n";
+ 	out << baseGeometry << " " << radius << "\n";
+}
+
+void particles::SetDataFromFile(QTextStream& in)
+{
+	in >> name >> baseGeometry >> radius;
 }

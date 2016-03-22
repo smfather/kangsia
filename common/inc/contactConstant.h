@@ -52,6 +52,7 @@ namespace parview
 		contact_coefficient_t CalcContactCoefficient(float ir, float jr, float im, float jm);
 		bool callDialog(QStringList& strList);
 		void SaveConstant(QTextStream& out);
+		void SetDataFromFile(QTextStream& in);
 		
 		bool isDialogOk;
 

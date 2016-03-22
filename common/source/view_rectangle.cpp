@@ -276,3 +276,13 @@ void rectangle::hertzian_contact_force(void* p, void* v, void* w, void* f, void*
 		(*force) += single_force;
 	}
 }
+
+void rectangle::SetDataFromFile(QTextStream& in)
+{
+	int _roll, _mtype;
+	in >> name >> _roll >> _mtype
+		>> points[0].x >> points[0].y >> points[0].z
+		>> points[1].x >> points[1].y >> points[1].z
+		>> points[2].x >> points[2].y >> points[2].z
+		>> points[3].x >> points[3].y >> points[3].z;
+}

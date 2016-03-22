@@ -1208,6 +1208,61 @@ void GLWidget::defineCollidConst()
 	}
 }
 
+void GLWidget::OpenTXT_file(QString& file)
+{
+	QString ch;
+	QFile pf(file);
+	pf.open(QIODevice::ReadOnly | QIODevice::Text);
+	QTextStream in(&pf);
+	in >> ch;
+	if (ch == "PARVIEW_VERSION"){
+		QString ver;
+		in >> ver;
+		while (!in.atEnd()){
+			in >> ch;
+			if (ch == "OBJECT"){
+				in >> ch;
+				if (ch == "LINE"){
+					parview::line *l = new parview::line;
+					l->SetDataFromFile(in);
+					l->define();
+					objs[l->Name()] = l;
+				}
+				else if (ch == "PLANE"){
+					parview::plane *p = new parview::plane;
+					p->SetDataFromFile(in);
+					p->define();
+					objs[p->Name()] = p;
+				}
+				else if (ch == "PARTICLES"){
+					if (objs.find("particles") != objs.end() && isSetParticle){
+						
+					}
+					parview::particles* par = new parview::particles;
+					par->SetDataFromFile(in);
+					par->bindingWindowHeight(&wHeight);
+					std::map<QString, Object*>::iterator obj = objs.find(par->BaseGeometryText());
+					if (par->define(obj->second)){
+						objs[par->Name()] = par;
+						obj->second->SetHide(true);
+						pview_ptr = par;
+						isSetParticle = true;
+					}
+					else
+						delete par;
+				}
+			}
+			else if (ch == "CONTACT_CONSTANT"){
+				contactConstant cc;
+				cc.SetDataFromFile(in);
+				cc.obj_i = objs.find(cc.obj_si)->second;
+				cc.obj_j = objs.find(cc.obj_sj)->second;
+				cconsts.push_back(cc);
+			}
+		}
+	}
+}
+
 void GLWidget::OpenFiles(QStringList& fnames)
 {
 	QString ch;
@@ -1421,7 +1476,7 @@ void GLWidget::OpenFiles(QStringList& fnames)
 bool GLWidget::SaveModel(QFile& file)
 {
 	QTextStream out(&file);
-	out << "PARVIEW_VERSION_1_0\n";
+	out << "PARVIEW_VERSION" << " " << "1.0\n";
 	if (objs.size())
 	{
 		for (std::map<QString, Object*>::iterator obj = objs.begin(); obj != objs.end(); obj++){

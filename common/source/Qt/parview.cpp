@@ -184,8 +184,8 @@ void parVIEW::openproj()
 		QString file = fileNames.at(0);
 		int begin = file.lastIndexOf(".");
 		QString ext = file.mid(begin);
-		if (ext == "txt"){
-
+		if (ext == ".txt"){
+			gl->OpenTXT_file(file);
 		}
 	}
 	gl->OpenFiles(fileNames);

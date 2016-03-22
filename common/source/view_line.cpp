@@ -163,3 +163,19 @@ void line::SaveObject(QTextStream& out)
 	out << startPoint[0] << " " << startPoint[1] << " " << startPoint[2] << "\n";
 	out << endPoint[0] << " " << endPoint[1] << " " << endPoint[2] << "\n";
 }
+
+void line::SetDataFromFile(QTextStream& in)
+{
+	int _roll, _mtype;
+	in >> name >> _roll
+		>> _mtype
+		>> startPoint[0] >> startPoint[1] >> startPoint[2]
+		>> endPoint[0] >> endPoint[1] >> endPoint[2];
+	roll = (ObjectRoll)_roll;
+	mtype = (material_type)_mtype;
+}
+
+void line::updateDataFromFile(QFile& pf, unsigned int fdtype)
+{
+
+}

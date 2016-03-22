@@ -42,7 +42,7 @@ namespace parview
 		virtual void saveCurrentData(QFile& pf);
 		virtual void updateDataFromFile(QFile& pf, unsigned int fdtype);
 		virtual void hertzian_contact_force(void* p, void* v, void* w, void* f, void* m, float ma, float dt, parview::contactConstant* cc){}
-
+		void SetDataFromFile(QTextStream& in);
 		void insert_particle_buffer(float* p, unsigned int n);
 		void alloc_buffer(QFile& pf, unsigned int n);
 		void alloc_buffer_sph(QFile& pf, unsigned int n);

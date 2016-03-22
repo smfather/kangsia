@@ -22,3 +22,8 @@ void plane::saveCurrentData(QFile& pf)
 	if (!ms)
 		return;
 }
+
+void plane::SetDataFromFile(QTextStream& in)
+{
+
+}

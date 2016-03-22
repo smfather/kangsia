@@ -55,6 +55,7 @@ namespace parview
 		void getSphFileData(QStringList& fnames);
 		void getDemFileData(QStringList& fnames, bool rt);
 		void OpenFiles(QStringList& fnames);
+		void OpenTXT_file(QString& file);
 		void saveCurrentData(QFile& pf);
 		bool SaveModel(QFile& pf);
 		void UpdateRtDEMData();

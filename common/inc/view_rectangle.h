@@ -26,6 +26,7 @@ namespace parview
 		virtual void saveCurrentData(QFile& pf);
 		virtual void updateDataFromFile(QFile& pf, unsigned int fdtype){}
 		virtual void hertzian_contact_force(void* p, void* v, void* w, void* f, void* m, float ma, float dt, parview::contactConstant* cc);
+		void SetDataFromFile(QTextStream& in);
 		vector3<float> points[4];
 
 		QDialog *rectDialog;

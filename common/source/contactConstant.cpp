@@ -76,6 +76,11 @@ void parview::contactConstant::SaveConstant(QTextStream& out)
 	out << restitution << " " << friction << " " << stiff_ratio << "\n";
 }
 
+void parview::contactConstant::SetDataFromFile(QTextStream& in)
+{
+	in >> obj_si >> obj_sj >> restitution >> friction >> stiff_ratio;
+}
+
 contact_coefficient_t parview::contactConstant::CalcContactCoefficient(float ir, float jr, float im, float jm)
 {
 	contact_coefficient_t cct;
