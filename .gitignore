@@ -18,6 +18,12 @@ $RECYCLE.BIN/
 *.cache
 *.pdb
 *.tmp
+*.obj
+*.exe
+*.ilk
+*.pdb
+*.sdf
+*.log
 
 # Windows shortcuts
 *.lnk
