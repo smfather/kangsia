@@ -70,6 +70,7 @@ namespace parview
 		geometry_type Type() { return type; }
 		QString Name() { return name; }
 		mass* Mass_ptr() { return ms;  }
+		material_type MaterialType() { return mtype; }
 		cmaterialType Material() { return material; }
 		colors::color_type GetColor() { return ctype; }
 		bool Hide() { return isHide; }

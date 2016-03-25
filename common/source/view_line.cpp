@@ -174,6 +174,8 @@ void line::SetDataFromFile(QTextStream& in)
 	roll = (ObjectRoll)_roll;
 	mtype = (material_type)_mtype;
 	material = getMaterialConstant(mtype);
+	if (roll == ROLL_PARTICLE)
+		Object::isHide = true;
 }
 
 void line::updateDataFromFile(QFile& pf, unsigned int fdtype)

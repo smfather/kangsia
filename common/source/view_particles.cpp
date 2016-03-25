@@ -154,14 +154,16 @@ bool particles::define(void* tg)
 			float spacing = (len - (radius * 2) * (_np - 1)) / (_np - 1);
 			if (!pos[0])
 				pos[0] = new float[_np * 4];
+			if (!vel[0])
+				vel[0] = new float[_np * 4];
 			if (!color[0])
 				color[0] = new float[_np * 4];
 			for (unsigned int i = np, j = 0; j < _np; i++, j++){
 				algebra::vector4<float> p(sp + j*(radius * 2.0f + spacing) * t, radius);
-				pos[0][i * 4 + 0] = p.x;
-				pos[0][i * 4 + 1] = p.y;
-				pos[0][i * 4 + 2] = p.z;
-				pos[0][i * 4 + 3] = p.w;
+				pos[0][i * 4 + 0] = p.x; vel[0][i * 4 + 0] = 0.0f;
+				pos[0][i * 4 + 1] = p.y; vel[0][i * 4 + 1] = 0.0f;
+				pos[0][i * 4 + 2] = p.z; vel[0][i * 4 + 2] = 0.0f;
+				pos[0][i * 4 + 3] = p.w; vel[0][i * 4 + 3] = 0.0f;
 				if (maxRadius < p.w)
 					maxRadius = p.w;
 				algebra::vector4<float> clr = colors::GetColor(geo->GetColor());
@@ -172,6 +174,8 @@ bool particles::define(void* tg)
 			}
 			np += _np;
 			geo->SetRoll(ROLL_PARTICLE);
+			ctype = geo->GetColor();
+			mtype = geo->MaterialType();
 			material = geo->Material();
 			break;
 		}
@@ -1055,12 +1059,12 @@ void particles::Click_cancel()
 void particles::SaveObject(QTextStream& out)
 {
  	out << "OBJECT" << " " << "PARTICLES" << " " << name << "\n";
-	out << np << " " << radius << " " << (int)mtype;
+	out << np << " " << radius << " " << (int)mtype << "\n";
 	QFile pio(modeler::modelPath() + modeler::modelName() + "/particles.par");
 	pio.open(QIODevice::WriteOnly);
 	pio.write((char*)pos[0], sizeof(float) * 4 * np);
 	pio.write((char*)vel[0], sizeof(float) * 4 * np);
-	pio.write((char*)color[0], sizeof(float) * 4 * np);
+	pio.write((char*)particles::color[0], sizeof(float) * 4 * np);
 	pio.close();
 	// 	for (unsigned int i = 0; i < cpProcess.size(); i++){
 // 		out << cpProcess.at(i);
