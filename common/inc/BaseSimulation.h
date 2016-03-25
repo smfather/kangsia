@@ -42,6 +42,7 @@ public:
 	std::map<parview::Object*, parview::Object*>& PairContact() { return pairContact; }
 	void ContactConstants(std::list<parview::contactConstant>* cc) { cconsts = cc; }
 	QProgressBar* GetProgressBar() { return pBar; }
+	QLineEdit* GetDurationTimeWidget() { return durationTime; }
 
 protected:
 	void setContactCoefficient(cmaterialType m1, cmaterialType m2)
@@ -59,6 +60,7 @@ protected:
 	std::list<parview::contactConstant> *cconsts;
 
 	QProgressBar *pBar;
+	QLineEdit *durationTime;
 };
 
 #endif

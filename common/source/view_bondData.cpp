@@ -24,7 +24,7 @@ void bondData::setBondData(QFile& pf)
 	pf.read((char*)bds, sizeof(bond_data)*size);
 }
 
-void bondData::draw()
+void bondData::draw(GLenum eMode)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glPushMatrix();

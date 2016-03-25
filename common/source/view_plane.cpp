@@ -7,7 +7,7 @@ plane::plane() : Object()
 
 }
 
-void plane::draw()
+void plane::draw(GLenum eMode)
 {
 
 }

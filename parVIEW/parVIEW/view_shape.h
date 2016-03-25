@@ -19,7 +19,7 @@ namespace parview
 		
 		void draw_shape();
 		virtual bool callDialog(DIALOGTYPE dt = NEW_OBJECT) { return true; }
-		virtual void draw();
+		virtual void draw(GLenum eMode);
 		virtual void define(void* tg = 0);
 		virtual void SaveObject(QTextStream& out) {}
 		virtual void saveCurrentData(QFile& pf);

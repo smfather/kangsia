@@ -35,7 +35,7 @@ void object::setObjectData(QFile& pf)
 	pf.read((char*)points.get_ptr(), sizeof(vector3<double>)*point_size);
 }
 
-void object::draw()
+void object::draw(GLenum eMode)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glPushMatrix();

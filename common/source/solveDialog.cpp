@@ -125,5 +125,5 @@ void solveDialog::Click_Cancel()
 {
 	solveDlg->close();
 	delete solveDlg; solveDlg = NULL;
-	isDialogOk = true;
+	isDialogOk = false;
 }

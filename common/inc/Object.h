@@ -10,9 +10,9 @@
 #include <QObject>
 #include <QMessageBox>
 #include <QFile>
-#include <QString>
 #include <map>
 #include "types.h"
+#include "modeler.h"
 #include "colors.h"
 #include "algebra.h"
 #include "contactConstant.h"
@@ -54,12 +54,13 @@ namespace parview
 			//if (CBMaterial) delete CBMaterial; CBMaterial = NULL;
 		}
 		virtual bool callDialog(DIALOGTYPE dt = NEW_OBJECT) = 0;
-		virtual void draw() = 0;
+		virtual void draw(GLenum eMode) = 0;
 		virtual void SaveObject(QTextStream& out) = 0;
 		virtual void updateDataFromFile(QFile& pf, unsigned int fdtype) = 0;
 		virtual void saveCurrentData(QFile& pf) = 0;
 		virtual void hertzian_contact_force(void* p, void* v, void* w, void* f, void* m, float ma, float dt, contactConstant* cc) = 0;
 
+		int ID() { return count; }
 		void allocMass();
 		void setMassPointer(mass* _ms) { ms = _ms; }
 		void setName(QString& _n) { name = _n; }
@@ -105,8 +106,8 @@ namespace parview
 	private:
 		static int count;
 
-	signals:
-		void mySignal();
+// 	signals:
+// 		void mySignal();
 	};
 }
 

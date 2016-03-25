@@ -4,6 +4,7 @@
 #include "timer.h"
 #include "view_controller.h"
 #include <cmath>
+#include <QLineEdit>
 
 //#include <QtWidgets>
 
@@ -52,6 +53,9 @@ bool DemSimulation::Initialize()
 	// 			alpha[i].w = 2.0f * acc[i].w * pow(pos[i].w, 2) / 5.0f;
 	// 		}
 	BaseSimulation::pBar = new QProgressBar;
+	//pBar->setGeometry()
+	BaseSimulation::durationTime = new QLineEdit;
+	durationTime->setFrame(false);
 	cellSize = viewPars->GetMaxRadius() * 2.0f;
 	worldOrigin = vector3<float>(-1.1, -1.1, -1.1);
 	gridSize = vector3<unsigned int>(128, 128, 128);
@@ -132,9 +136,12 @@ void DemSimulation::CpuRun()
 	std::time(&t);
 	localtime_s(&date, &t);
 	float times = cStep * dt;
+	parview::view_controller::addTimes(parview::view_controller::getTotalBuffers(), times);
 	float elapsed_time = 0.f;
 	cStep++;
 	tmer.Start();
+	QString durt_str;
+	float durt = 0;
 	while (nStep > cStep){
 		times = cStep * dt;
 		TimeStepping<float, true>(pos, vel, acc, omega, alpha, force, moment);
@@ -144,11 +151,16 @@ void DemSimulation::CpuRun()
 		TimeStepping<float, false>(pos, vel, acc, omega, alpha, force, moment);
 		if (!((cStep) % saveStep)){
 			part++;
+			//parview::view_controller::addTimes(part++, times);
 			pBar->setValue(part);
 			time(&t);
 			localtime_s(&date, &t);
 			tmer.Stop();
+			durt += tmer.GetElapsedTimeF();
 			viewPars->insert_particle_buffer(&(pos[0].x), viewPars->Np());
+			parview::view_controller::addTimes(parview::view_controller::getTotalBuffers(), times);
+			durt_str.sprintf("%.4f", durt);
+			durationTime->setText(durt_str);
 			eachStep = 0;
 			tmer.Start();
 		}

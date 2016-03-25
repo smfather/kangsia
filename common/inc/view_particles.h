@@ -12,6 +12,7 @@ class QLineEdit;
 class QLabel;
 class QComboBox;
 class QGridLayout;
+class QTabWidget;
 QT_END_NAMESPACE
 
 namespace parview
@@ -36,7 +37,7 @@ namespace parview
 
 		void draw_particles();
 		virtual bool callDialog(DIALOGTYPE dt = NEW_OBJECT);
-		virtual void draw();
+		virtual void draw(GLenum eMode);
 		bool define(void* tg = 0);
 		virtual void SaveObject(QTextStream& out);
 		virtual void saveCurrentData(QFile& pf);
@@ -85,6 +86,7 @@ namespace parview
 		void changeParticleColor(unsigned int id);
 		void drawSupportSphere(unsigned int id);
 		void AddParticlesFromFile(QFile& pf);
+		void AddParticleFromManual(float* p, float* v);
 		void GeometryCombeBoxWidgetList(QStringList &stList) { geoComboxList = stList; }
 		QString& BaseGeometryText() { return baseGeometry; }
 
@@ -116,17 +118,21 @@ namespace parview
 		vector3<float> support_pos;
 
 		bool isSetColor;
-
+		bool isglewinit;
 // 		// Qt
+		QWidget *byGeoTab;
+		QWidget *byManualTab;
+		QTabWidget *tabWidget;
 		QDialog *particleDialog;
-		QLabel *LBaseGeometry;
 		QComboBox *CBGeometry;
-		QLabel *LName;
+		QLineEdit *LEMRadius;
 		QLineEdit *LEName;
-		QLabel *LRadius;
 		QLineEdit *LERadius;
+		QLineEdit *LEPosition;
+		QLineEdit *LEVelocity;
 		QGridLayout *particleLayout;
 		QStringList geoComboxList;
+		QStringList cpProcess;
 		
 		private slots:
 		virtual void Click_ok();

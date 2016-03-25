@@ -23,7 +23,7 @@ namespace parview
 		cube(std::map<QString, Object*> *_objs);
 		virtual ~cube() {}
 		virtual bool callDialog(DIALOGTYPE dt = NEW_OBJECT);
-		virtual void draw();
+		virtual void draw(GLenum eMode);
 		virtual void SaveObject(QTextStream& out) {}
 		bool define(void* tg = 0);
 		virtual void saveCurrentData(QFile& pf);

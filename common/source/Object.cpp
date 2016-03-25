@@ -22,11 +22,13 @@ Object::Object(geometry_type gt)
 	, roll(ROLL_BOUNDARY)
 {
 	count++;
-	color[0] = colors[count * 4 + 0];
-	color[1] = colors[count * 4 + 1];
-	color[2] = colors[count * 4 + 2];
-	color[3] = colors[count * 4 + 3];
+// 	color[0] = colors[count * 4 + 0];
+// 	color[1] = colors[count * 4 + 1];
+// 	color[2] = colors[count * 4 + 2];
+// 	color[3] = colors[count * 4 + 3];
 	ctype = (colors::color_type)count;
+	vector4<float> clr = colors::GetColor(ctype);
+	color[0] = clr.x; color[1] = clr.y; color[2] = clr.z; color[3] = clr.w;
 	if (!CBMaterial){
 		LMaterial = new QLabel("Material");
 		CBMaterial = new QComboBox;

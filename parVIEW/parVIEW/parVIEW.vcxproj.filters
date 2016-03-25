@@ -179,6 +179,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_BaseSimulation.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\source\modeler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\common\resource\parview.ui">
@@ -271,6 +274,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\common\inc\timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\inc\modeler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

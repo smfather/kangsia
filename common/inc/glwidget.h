@@ -11,6 +11,7 @@
 namespace parview
 {
 
+#define SELECT_BUF_SIZE 512
 
 	GLuint makeCubeObject(int* index, float* vertex);
 
@@ -95,6 +96,7 @@ namespace parview
 		void wheelEvent(QWheelEvent *);
 
 	private:
+		void picking(int x, int y);
 		float& verticalMovement() { return trans_y; }
 		float& horizontalMovement() { return trans_x; }
 		void DrawCartesianCoordinates(vector3<double>& pos, vector3<double>& angle);
@@ -135,9 +137,9 @@ namespace parview
 		float times[MAX_FRAME];
 
 		viewObjectType votype;
-
 		std::list<contactConstant> cconsts;
 		std::map<QString, parview::Object*> objs;
+		QMap<int, parview::Object*> pickings;
 
 		parview::Object* pview_ptr = NULL;
 

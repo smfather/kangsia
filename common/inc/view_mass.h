@@ -17,7 +17,7 @@ namespace parview
 		float* Velocity(unsigned int i) { return &vel[i].x; }
 		vector3<float>& Force(unsigned int i) { return force[i]; }
 		virtual bool callDialog(DIALOGTYPE dt = NEW_OBJECT) { return true; }
-		virtual void draw();
+		virtual void draw(GLenum eMode);
 		virtual void SaveObject(QTextStream& out) {}
 		void define(void* tg = 0);
 		virtual void saveCurrentData(QFile& pf);

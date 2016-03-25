@@ -11,6 +11,8 @@
 #include <QLineEdit>
 #include <QGridLayout>
 #include <QComboBox>
+#include <QTabWidget>
+#include <QDialogButtonBox>
 
 #include "view_cube.h"
 #include "view_line.h"
@@ -30,6 +32,7 @@ particles::particles()
 	, name("particles")
 	, isDisplaySupportRadius(false)
 	, particleDialog(NULL)
+	, isglewinit(false)
 {
 	//Object::type = NO_GEOMETRY_TYPE;
 	for (int i = 0; i < MAX_FRAME; i++){
@@ -41,7 +44,9 @@ particles::particles()
 
 		color[i] = NULL;
 	}
-
+	m_posVBO = 0;
+	m_colorVBO = 0;
+	m_program = 0;
 }
 
 particles::~particles()
@@ -53,7 +58,7 @@ particles::~particles()
 		if (color[i]) delete[] color[i]; color[i] = NULL;
 	}
 
-	glDeleteProgram(m_program);
+	if (m_program){ glDeleteProgram(m_program); m_program = 0; }
 }
 
 void particles::draw_particles()
@@ -61,11 +66,11 @@ void particles::draw_particles()
 	/*if (view_controller::Play())
 		view_controller::move2forward1x();*/
 	view_controller::is_end_frame();
-	draw();
+	draw(GL_RENDER);
 }
 
 
-void particles::draw()
+void particles::draw(GLenum eMode)
 {
 	if (isDisplaySupportRadius){
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -103,7 +108,7 @@ void particles::draw()
 	glUseProgram(0);
 	glDisable(GL_POINT_SPRITE_ARB);
 	glEnable(GL_LIGHTING);
-	emit Object::mySignal();
+	emit mySignal();
 }
 
 void particles::_drawPoints()
@@ -134,41 +139,44 @@ void particles::_drawPoints()
 
 bool particles::define(void* tg)
 {
- 	Object *geo = (Object *)tg;
- 
- 	switch (geo->Type()){
-	case LINE:
-	{
-		parview::line *l = dynamic_cast<line*>(geo);
-		algebra::vector3<float> ep(l->endPoint);
-		algebra::vector3<float> sp(l->startPoint);
-		float len = (ep - sp).length();
-		algebra::vector3<float> t = (ep - sp) / len;
-		unsigned int _np = (int)floor(len / (radius * 2)) + 1;
-		float spacing = (len - (radius * 2) * (_np - 1)) / (_np - 1);
-		if(!pos[0])
-			pos[0] = new float[_np * 4];
-		if(!color[0])
-			color[0] = new float[_np * 4];
-		for (unsigned int i = np, j = 0; j < _np; i++, j++){
-			algebra::vector4<float> p(sp + j*(radius * 2.0f + spacing) * t, radius);
-			pos[0][i * 4 + 0] = p.x;
-			pos[0][i * 4 + 1] = p.y;
-			pos[0][i * 4 + 2] = p.z;
-			pos[0][i * 4 + 3] = p.w;
-			if (maxRadius < p.w)
-				maxRadius = p.w;
-			algebra::vector4<float> clr = colors::GetColor(geo->GetColor());
-			color[0][i * 4 + 0] = clr.x;
-			color[0][i * 4 + 1] = clr.y;
-			color[0][i * 4 + 2] = clr.z;
-			color[0][i * 4 + 3] = clr.w;
+	if (tg != NULL){
+		Object *geo = (Object *)tg;
+
+		switch (geo->Type()){
+		case LINE:
+		{
+			parview::line *l = dynamic_cast<line*>(geo);
+			algebra::vector3<float> ep(l->endPoint);
+			algebra::vector3<float> sp(l->startPoint);
+			float len = (ep - sp).length();
+			algebra::vector3<float> t = (ep - sp) / len;
+			unsigned int _np = (int)floor(len / (radius * 2)) + 1;
+			float spacing = (len - (radius * 2) * (_np - 1)) / (_np - 1);
+			if (!pos[0])
+				pos[0] = new float[_np * 4];
+			if (!color[0])
+				color[0] = new float[_np * 4];
+			for (unsigned int i = np, j = 0; j < _np; i++, j++){
+				algebra::vector4<float> p(sp + j*(radius * 2.0f + spacing) * t, radius);
+				pos[0][i * 4 + 0] = p.x;
+				pos[0][i * 4 + 1] = p.y;
+				pos[0][i * 4 + 2] = p.z;
+				pos[0][i * 4 + 3] = p.w;
+				if (maxRadius < p.w)
+					maxRadius = p.w;
+				algebra::vector4<float> clr = colors::GetColor(geo->GetColor());
+				color[0][i * 4 + 0] = clr.x;
+				color[0][i * 4 + 1] = clr.y;
+				color[0][i * 4 + 2] = clr.z;
+				color[0][i * 4 + 3] = clr.w;
+			}
+			np += _np;
+			geo->SetRoll(ROLL_PARTICLE);
+			material = geo->Material();
+			break;
 		}
-		np += _np;
-		geo->SetRoll(ROLL_PARTICLE);
-		material = geo->Material();
-		break;
 	}
+ 	
 // 	case CUBE:
 // 		{
 // 			cube *c = dynamic_cast<cube*>(geo);
@@ -233,10 +241,17 @@ bool particles::define(void* tg)
 		msgBox("Particle generation is failed.", QMessageBox::Critical);
 		return false;
 	}
-	glewInit();
+	if (!isglewinit)
+		glewInit();
 
-	m_posVBO = 0;
-	m_colorVBO = 0;
+	if (m_posVBO){
+		glDeleteBuffers(1, &m_posVBO);
+		m_posVBO = 0;
+	}
+	if (m_colorVBO){
+		glDeleteBuffers(1, &m_colorVBO);
+		m_colorVBO = 0;
+	}
 	unsigned int memSize = sizeof(float) * 4 * np;
 	buffer = pos[view_controller::getFrame()];
 	color_buffer = color[view_controller::getFrame()];
@@ -277,8 +292,8 @@ bool particles::define(void* tg)
 		//*ptr++ = 1.0f;
 	//}
 	//glUnmapBufferARB(GL_ARRAY_BUFFER);
-
-	m_program = _compileProgram(vertexShader, spherePixelShader);
+	if (!m_program)
+		m_program = _compileProgram(vertexShader, spherePixelShader);
 
 	return true;
 }
@@ -290,6 +305,7 @@ unsigned int particles::createVBO(unsigned int size, float *bufferData)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, size, bufferData, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
 	return vbo;
 }
 
@@ -590,7 +606,7 @@ void particles::alloc_buffer_sph(QFile& pf, unsigned int n)
 	pf.read((char*)&time, sizeof(double));
 	pf.read((char*)&np, sizeof(unsigned int));
 	char *ptype = new char[np];
-	view_controller::addTimes(time);
+	view_controller::addTimes(view_controller::getTotalBuffers(), time);
 	freeSurface[view_controller::getTotalBuffers()] = new bool[np];
 	freeSurfaceValue[view_controller::getTotalBuffers()] = new float[np];
 	pos[view_controller::getTotalBuffers()] = new float[np * 4];
@@ -804,6 +820,55 @@ void particles::changeParticleColor(unsigned int id)
 	clr[id * 4 + 3] = 1.0f;
 }
 
+void particles::AddParticleFromManual(float* p, float* v)
+{
+	float *tpos = new float[(np + 1) * 4];
+	float *tvel = new float[(np + 1) * 4];
+	float *tclr = new float[(np + 1) * 4];
+	memcpy(tpos, pos[view_controller::getFrame()], sizeof(float) * 4 * np);
+	memcpy(tvel, pos[view_controller::getFrame()], sizeof(float) * 4 * np);
+	memcpy(tclr, pos[view_controller::getFrame()], sizeof(float) * 4 * np);
+	tpos[np * 4 + 0] = p[0]; tpos[np * 4 + 1] = p[1]; tpos[np * 4 + 2] = p[2]; tpos[np * 4 + 3] = p[3];
+	tvel[np * 4 + 0] = v[0]; tvel[np * 4 + 1] = v[1]; tvel[np * 4 + 2] = v[2]; tvel[np * 4 + 3] = v[3];
+	tclr[np * 4 + 0] = Object::color[0]; tclr[np * 4 + 1] = Object::color[1];
+	tclr[np * 4 + 2] = Object::color[2]; tclr[np * 4 + 3] = Object::color[3];
+	if (maxRadius < p[3])
+		maxRadius = p[3];
+	if(pos[view_controller::getFrame()])
+		delete [] pos[view_controller::getFrame()];
+	if(color[view_controller::getFrame()])
+		delete [] color[view_controller::getFrame()];
+	if(vel[view_controller::getFrame()])
+		delete [] vel[view_controller::getFrame()];
+	pos[view_controller::getFrame()] = new float[(np + 1) * 4];
+	vel[view_controller::getFrame()] = new float[(np + 1) * 4];
+	color[view_controller::getFrame()] = new float[(np + 1) * 4];
+	memcpy(pos[view_controller::getFrame()], tpos, sizeof(float)*(np + 1) * 4);
+	memcpy(vel[view_controller::getFrame()], tvel, sizeof(float)*(np + 1) * 4);
+	memcpy(color[view_controller::getFrame()], tclr, sizeof(float)*(np + 1) * 4);
+	np = np + 1;
+	if(!isglewinit)
+		glewInit();
+	unsigned int memSize = sizeof(float) * 4 * np;
+	if (m_posVBO){
+		glDeleteBuffers(1, &m_posVBO); 
+		m_posVBO = 0;
+	}
+	if (m_colorVBO){
+		glDeleteBuffers(1, &m_colorVBO);
+		m_colorVBO = 0;
+	}
+	buffer = pos[view_controller::getFrame()];
+	color_buffer = color[view_controller::getFrame()];
+	if (!m_posVBO)
+		m_posVBO = createVBO(memSize, buffer);
+	if (!m_colorVBO)
+		m_colorVBO = createVBO(memSize, color_buffer);
+
+	if (!m_program)
+		m_program = _compileProgram(vertexShader, spherePixelShader);
+}
+
 void particles::AddParticlesFromFile(QFile& pf)
 {
 	unsigned int addnp = 742500;
@@ -854,33 +919,48 @@ bool particles::callDialog(DIALOGTYPE dt)
 {
 	if (!particleDialog){
 		particleDialog = new QDialog;
-		LBaseGeometry = new QLabel("Base geometry");
+		tabWidget = new QTabWidget;
+		byGeoTab = new QWidget;
+		byManualTab = new QWidget;
+		QLabel *LBaseGeometry = new QLabel("Base geometry");
 		CBGeometry = new QComboBox;
-		LName = new QLabel("Name");
+		QLabel *LName = new QLabel("Name");
 		LEName = new QLineEdit;
 		LEName->setText("particles");
 		LEName->setReadOnly(true);
-		LRadius = new QLabel("Radius");
+		QLabel *LRadius = new QLabel("Radius");
+		QLabel *LMRadius = new QLabel("Radius");
 		LERadius = new QLineEdit;
-// 		LStartPoint = new QLabel("Start point");
-// 		LEStartPoint = new QLineEdit;
-// 		LEndPoint = new QLabel("End point");
-// 		LEEndPoint = new QLineEdit;
-		particleLayout = new QGridLayout;
-		QPushButton* PBOk = new QPushButton("OK");
-		QPushButton* PBCancel = new QPushButton("Cancel");
-		connect(PBOk, SIGNAL(clicked()), this, SLOT(Click_ok()));
-		connect(PBCancel, SIGNAL(clicked()), this, SLOT(Click_cancel()));
+		LEMRadius = new QLineEdit;
+		QGridLayout *byGeoLayout = new QGridLayout;
 		CBGeometry->addItems(geoComboxList);
-		particleLayout->addWidget(LBaseGeometry, 0, 0); particleLayout->addWidget(CBGeometry, 0, 1, 1, 2);
-		particleLayout->addWidget(LName, 1, 0); particleLayout->addWidget(LEName, 1, 1, 1, 2);
-		particleLayout->addWidget(LRadius, 2, 0); particleLayout->addWidget(LERadius, 2, 1, 1, 2);
-		particleLayout->addWidget(PBOk, 3, 0); particleLayout->addWidget(PBCancel, 3, 1);
-// 		particleLayout->addWidget(LStartPoint, 3, 0);
-// 		particleLayout->addWidget(LEStartPoint, 3, 1, 1, 2);
-// 		particleLayout->addWidget(LEndPoint, 4, 0);
-// 		particleLayout->addWidget(LEEndPoint, 4, 1, 1, 2);
-		particleDialog->setLayout(particleLayout);
+		byGeoLayout->addWidget(LBaseGeometry, 0, 0); byGeoLayout->addWidget(CBGeometry, 0, 1, 1, 2);
+		byGeoLayout->addWidget(LName, 1, 0); byGeoLayout->addWidget(LEName, 1, 1, 1, 2);
+		byGeoLayout->addWidget(LRadius, 2, 0); byGeoLayout->addWidget(LERadius, 2, 1, 1, 2);
+		byGeoTab->setLayout(byGeoLayout);
+		tabWidget->addTab(byGeoTab, "Geometry"); byGeoTab->setObjectName("Geometry");
+		QLabel *LPosition = new QLabel("Position");
+		LEPosition = new QLineEdit;
+		QLabel *LVelocity = new QLabel("Velocity");
+		LEVelocity = new QLineEdit;
+		QGridLayout *byManualLayout = new QGridLayout;
+		byManualLayout->addWidget(LMaterial, 0, 0);
+		byManualLayout->addWidget(CBMaterial, 0, 1, 1, 2);
+		byManualLayout->addWidget(LPosition, 1, 0);
+		byManualLayout->addWidget(LEPosition, 1, 1, 1, 2);
+		byManualLayout->addWidget(LVelocity, 2, 0);
+		byManualLayout->addWidget(LEVelocity, 2, 1, 1, 2);
+		byManualLayout->addWidget(LMRadius, 3, 0);
+		byManualLayout->addWidget(LEMRadius, 3, 1, 1, 2);
+		byManualTab->setLayout(byManualLayout);
+		tabWidget->addTab(byManualTab, "Manual"); byManualTab->setObjectName("Manual");
+		QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+		connect(buttonBox, SIGNAL(accepted()), this, SLOT(Click_ok()));
+		connect(buttonBox, SIGNAL(rejected()), this, SLOT(Click_cancel()));
+		QVBoxLayout *mainLayout = new QVBoxLayout;
+		mainLayout->addWidget(tabWidget);
+		mainLayout->addWidget(buttonBox);
+		particleDialog->setLayout(mainLayout);
 	}
 
 	particleDialog->exec();
@@ -889,47 +969,74 @@ bool particles::callDialog(DIALOGTYPE dt)
 
 void particles::Click_ok()
 {
-	if (LEName->text().isEmpty()){
-		msgBox("Value of name is empty!!", QMessageBox::Critical);
-		return;
+	bool isManual;
+	float p[4] = { 0, };
+	float v[4] = { 0, };
+	QWidget *cTab = tabWidget->currentWidget();
+	QString on = cTab->objectName();
+	if (on == "Geometry"){
+		if (LEName->text().isEmpty()){
+			msgBox("Value of name is empty!!", QMessageBox::Critical);
+			return;
+		}
+		if (LERadius->text().isEmpty()){
+			msgBox("Value of radius is empty!!", QMessageBox::Critical);
+			return;
+		}
+		baseGeometry = CBGeometry->currentText();
+		Object::name = LEName->text();
+		isManual = false;
+		radius = LERadius->text().toFloat();
+// 		QString comm;
+// 		QTextStream(&comm) << "Create Geometry " << baseGeometry << " " << radius << "\n";
 	}
-	if (LERadius->text().isEmpty()){
-		msgBox("Value of radius is empty!!", QMessageBox::Critical);
-		return;
+	else if(on == "Manual"){
+		QStringList ss;// = LEPa->text().split(",");
+		if (LEMRadius->text().isEmpty()){
+			msgBox("Value of radius is empty!!", QMessageBox::Critical);
+			return;
+		}
+		if (LEPosition->text().split(",").size() == 3)
+			ss = LEPosition->text().split(",");
+		else
+			if (LEPosition->text().split(" ").size() == 3)
+				ss = LEPosition->text().split(" ");
+			else
+				if (LEPosition->text().split(", ").size() == 3)
+					ss = LEPosition->text().split(", ");
+				else {
+					msgBox("Position is wrong data.", QMessageBox::Critical);
+					return;
+				}
+		p[0] = ss.at(0).toFloat(); p[1] = ss.at(1).toFloat(); p[2] = ss.at(2).toFloat();
+
+		if (LEVelocity->text().split(",").size() == 3)
+			ss = LEVelocity->text().split(",");
+		else
+			if (LEVelocity->text().split(" ").size() == 3)
+				ss = LEVelocity->text().split(" ");
+			else
+				if (LEVelocity->text().split(", ").size() == 3)
+					ss = LEVelocity->text().split(", ");
+				else{
+					msgBox("Velocity is wrong data.", QMessageBox::Critical);
+					return;
+					}
+		v[0] = ss.at(0).toFloat(); v[1] = ss.at(1).toFloat(); v[2] = ss.at(2).toFloat();
+		isManual = true;
+		baseGeometry = "none";
+		Object::name = "particles";
+		radius = p[3] = LEMRadius->text().toFloat();
+		mtype = material_str2enum(CBMaterial->currentText().toStdString());
+		material = getMaterialConstant(mtype);
+		AddParticleFromManual(p, v);
+// 		QString comm;
+// 		QTextStream(&comm) 
+// 			<< "Create Manual " << radius << " " << (int)mtype << " "
+// 			<< p[0] << " " << p[1] << " " << p[2] << " "
+// 			<< v[0] << " " << p[1] << " " << p[2] << "\n";
+// 		cpProcess.push_back(comm);
 	}
-// 	else if (LEStartPoint->text().isEmpty()){
-// 		msgBox("Value of start point is empty!!", QMessageBox::Critical);
-// 	}
-// 	else if (LEEndPoint->text().isEmpty()){
-// 		msgBox("Value of end point is empty!!", QMessageBox::Critical);
-// 	}
-
-// 	if (!checkParameter3(LEStartPoint)){
-// 		msgBox("Start point is wrong data.", QMessageBox::Critical);
-// 		return;
-// 	}
-// 	else if (!checkParameter3(LEEndPoint)){
-// 		msgBox("End point is wrong data.", QMessageBox::Critical);
-// 		return;
-// 	}
-
-	baseGeometry = CBGeometry->currentText();
-
-	Object::name = LEName->text();
-	//Object::mtype = material_str2enum(CBMaterial->currentText().toStdString());
-	//Object::material = getMaterialConstant(mtype);
-
-	radius = LERadius->text().toFloat();
-
-// 	QStringList chList = LEStartPoint->text().split(" ");
-// 	minPoint[0] = chList.at(0).toFloat();
-// 	minPoint[1] = chList.at(1).toFloat();
-// 	minPoint[2] = chList.at(2).toFloat();
-// 
-// 	chList = LEEndPoint->text().split(" ");
-// 	maxPoint[0] = chList.at(0).toFloat();
-// 	maxPoint[1] = chList.at(1).toFloat();
-// 	maxPoint[2] = chList.at(2).toFloat();
 
 	particleDialog->close();
 
@@ -948,10 +1055,63 @@ void particles::Click_cancel()
 void particles::SaveObject(QTextStream& out)
 {
  	out << "OBJECT" << " " << "PARTICLES" << " " << name << "\n";
- 	out << baseGeometry << " " << radius << "\n";
+	out << np << " " << radius << " " << (int)mtype;
+	QFile pio(modeler::modelPath() + modeler::modelName() + "/particles.par");
+	pio.open(QIODevice::WriteOnly);
+	pio.write((char*)pos[0], sizeof(float) * 4 * np);
+	pio.write((char*)vel[0], sizeof(float) * 4 * np);
+	pio.write((char*)color[0], sizeof(float) * 4 * np);
+	pio.close();
+	// 	for (unsigned int i = 0; i < cpProcess.size(); i++){
+// 		out << cpProcess.at(i);
+// 	}
+ 	//out << baseGeometry << " " << radius << "\n";
 }
 
 void particles::SetDataFromFile(QTextStream& in)
 {
-	in >> name >> baseGeometry >> radius;
+	unsigned int _np = 0;
+	float _rad = 0;
+	int mt = 0;
+	in >> name >> np >> radius >> mt; 
+	QFile pout(modeler::modelPath() + modeler::modelName() + "/particles.par");
+	pout.open(QIODevice::ReadOnly);
+	if (pos[0])
+		delete[] pos[0];
+	if (vel[0])
+		delete[] vel[0];
+	if (color[0])
+		delete[] color[0];
+	pos[0] = new float[np * 4];
+	vel[0] = new float[np * 4];
+	color[0] = new float[np * 4];
+	pout.read((char*)pos[0], sizeof(float)*np * 4);
+	pout.read((char*)vel[0], sizeof(float)*np * 4);
+	pout.read((char*)color[0], sizeof(float)*np * 4);
+	pout.close();
+	mtype = (material_type)mt;
+	material = getMaterialConstant(mtype);
+// 	if (op == "Create"){
+// 		if (ct == "Manual"){
+// 			baseGeometry = "none";
+// 			Object::name = "particles";
+// 			int mt;
+// 			float p[4] = { 0, };
+// 			float v[4] = { 0, };
+// 			in >> p[3] >> mt >> p[0] >> p[1] >> p[2] >> v[0] >> v[1] >> v[2];
+// 			radius = p[3];
+// 			mtype = (material_type)mt;
+// 			material = getMaterialConstant(mtype);
+// 			AddParticleFromManual(p, v);
+// 			QString comm;
+// 			QTextStream(&comm)
+// 				<< "Create Manual " << radius << " " << (int)mtype << " "
+// 				<< p[0] << " " << p[1] << " " << p[2] << " "
+// 				<< v[0] << " " << v[1] << " " << v[2] << "\n";
+// 			cpProcess.push_back(comm);
+// 		}
+// 		else if (ct == "Geometry"){
+// 			in >> baseGeometry >> radius;
+// 		}
+// 	}
 }

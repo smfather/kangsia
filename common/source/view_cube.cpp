@@ -44,7 +44,7 @@ cube::cube(std::map<QString, Object*> *_objs) : Object()
 	Object::objs = _objs;
 }
 
-void cube::draw()
+void cube::draw(GLenum eMode)
 {
 	if (isDefined){
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

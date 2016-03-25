@@ -89,6 +89,7 @@
     <ClCompile Include="..\..\common\source\contactConstant.cpp" />
     <ClCompile Include="..\..\common\source\DEM\DemSimulation.cpp" />
     <ClCompile Include="..\..\common\source\glwidget.cpp" />
+    <ClCompile Include="..\..\common\source\modeler.cpp" />
     <ClCompile Include="..\..\common\source\Object.cpp" />
     <ClCompile Include="..\..\common\source\Qt\main.cpp" />
     <ClCompile Include="..\..\common\source\Qt\particleInfoDialog.cpp" />
@@ -268,6 +269,7 @@
     <ClInclude Include="..\..\common\inc\cu_dem_dec.cuh" />
     <ClInclude Include="..\..\common\inc\cu_dem_impl.cuh" />
     <ClInclude Include="..\..\common\inc\materialLibrary.h" />
+    <ClInclude Include="..\..\common\inc\modeler.h" />
     <ClInclude Include="..\..\common\inc\MyTableWidgetItem.h" />
     <ClInclude Include="..\..\common\inc\Qt\ui_particleInfoDialog.h" />
     <CustomBuild Include="..\..\common\inc\solveDialog.h">

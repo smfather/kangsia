@@ -191,11 +191,12 @@ void rectangle::Click_cancel()
 	isDialogOk = false;
 }
 
-void rectangle::draw()
+void rectangle::draw(GLenum eMode)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glPushMatrix();
 	glDisable(GL_LIGHTING);
+	if (eMode == GL_SELECT) glLoadName((GLuint)ID());
 	glColor3fv(Object::color);
 	glCallList(glList);
 	glPopMatrix();
@@ -207,7 +208,7 @@ bool rectangle::define(void* tg)
 	glNewList(glList, GL_COMPILE);
 	glShadeModel(GL_SMOOTH);
 	//glColor3f(0.0f, 0.0f, 1.0f);
-
+	//glLoadName((GLuint)ID());
 	glBegin(GL_LINE_STRIP);
 	{
 		glVertex3f(points[0].x, points[0].y, points[0].z);
@@ -285,4 +286,7 @@ void rectangle::SetDataFromFile(QTextStream& in)
 		>> points[1].x >> points[1].y >> points[1].z
 		>> points[2].x >> points[2].y >> points[2].z
 		>> points[3].x >> points[3].y >> points[3].z;
+	roll = (ObjectRoll)_roll;
+	mtype = (material_type)_mtype;
+	material = getMaterialConstant(mtype);
 }

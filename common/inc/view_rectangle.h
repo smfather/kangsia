@@ -20,7 +20,7 @@ namespace parview
 		void setRectangleData(QFile& pf, unsigned int fdtype);
 		void SetFromFile(QTextStream& in);
 		virtual bool callDialog(DIALOGTYPE dt = NEW_OBJECT);
-		virtual void draw();
+		virtual void draw(GLenum eMode);
 		bool define(void* tg = 0);
 		virtual void SaveObject(QTextStream& out);
 		virtual void saveCurrentData(QFile& pf);

@@ -36,7 +36,7 @@ void mass::setMassData(QFile& pf)
 		);
 }
 
-void mass::draw()
+void mass::draw(GLenum eMode)
 {
 
 }

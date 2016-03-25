@@ -60,6 +60,7 @@ parVIEW::parVIEW(QWidget *parent)
 	connect(solveProcessAct, SIGNAL(triggered()), this, SLOT(solveProcess()));
 
 	connect(ui.actionChange_Shape, SIGNAL(triggered()), this, SLOT(ChangeShape()));
+	//dajlkfdjlakfjdlasfsdfsdfds
 
 	ui.mainToolBar->addAction(newAct);
 	ui.mainToolBar->addAction(openAct);
@@ -130,6 +131,12 @@ parVIEW::parVIEW(QWidget *parent)
 	LTimes->setContentsMargins(QMargins(10, 0, 0, 0));
 	ui.secToolBar->addWidget(LTimes);
 	ui.secToolBar->addWidget(LETimes);
+
+	QDir *dir = new QDir;
+	QString tdir = modeler::modelPath() + modeler::modelName();
+	if (!dir->exists(tdir)){
+		dir->mkdir(tdir);
+	}
 }
 
 parVIEW::~parVIEW()
@@ -175,7 +182,7 @@ void parVIEW::openrtproj()
 // CODEDYN
 void parVIEW::openproj()
 {
-	QString dir = "C:/";
+	QString dir = modeler::modelPath();
 	QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("open"), dir);
 	if (fileNames.isEmpty())
 		return;
@@ -222,7 +229,7 @@ void parVIEW::openproj()
 
 void parVIEW::saveproj()
 {
-	QString dir = "C:/";
+	QString dir = modeler::modelPath() + modeler::modelName();
 	QString fileName = QFileDialog::getSaveFileName(this, tr("save"), dir);
 	if (fileName.isEmpty())
 		return;
@@ -236,10 +243,14 @@ void parVIEW::saveproj()
 void parVIEW::mySlot()
 {
 	int cf = view_controller::getFrame();
+	
 	HSlider->setValue(cf);
 	QString str;
 	str.sprintf("%d", cf);
 	LEframe->setText(str);
+	float time = view_controller::getTimes();
+	str.clear(); str.sprintf("%f", time);
+	LETimes->setText(str);
 }
 
 void parVIEW::ani_previous2x()
@@ -270,8 +281,10 @@ void parVIEW::ani_play()
 	if (gl->is_set_particle()){
 		view_controller::on_play();
 		QString tf;
-		tf.sprintf("%.5f", view_controller::getTimes());
-		LETimes->setText(tf);
+		tf.sprintf("/ %d", view_controller::getTotalBuffers() - 1);
+		Lframe->setText(tf);
+		HSlider->setMaximum(view_controller::getTotalBuffers() - 1);
+		
 	}
 	
 	if (view_controller::is_end_frame())
@@ -332,11 +345,11 @@ void parVIEW::ani_scrollbar()
 	QString str;
 	str.sprintf("%d", value);
 	LEframe->setText(str);
-	if (gl->is_set_particle()) {
-		view_controller::setFrame(unsigned int(value));
-		if (view_controller::getRealTimeParameter())
-			gl->UpdateRtDEMData();
-	}
+ 	if (gl->is_set_particle()) {
+ 		view_controller::setFrame(unsigned int(value));
+// 		if (view_controller::getRealTimeParameter())
+// 			gl->UpdateRtDEMData();
+ 	}
 }
 
 void parVIEW::openPinfoDialog()
@@ -394,6 +407,7 @@ void parVIEW::collidConst()
 
 void parVIEW::solveProcess()
 {
+	//disco
 	QMessageBox msgBox;
 	if (!dem){
 		dem = new DemSimulation(gl);
@@ -417,10 +431,6 @@ void parVIEW::solveProcess()
 		}
 	}
 
-// 	contactCoefficientTable cct;
-// 	cct.setTable(dem->PairContact());
-// 	cct.exec();
-
 	dem->ContactConstants(gl->ContactConstants());
 	solveDialog solDlg(gl);
 	if (solDlg.callDialog()){
@@ -430,12 +440,19 @@ void parVIEW::solveProcess()
 		dem->TimeStep() = solDlg.timeStep;
 
 		if (dem->Initialize(/*gl->Objects()*/)){
-			ui.statusBar->addWidget(dem->GetProgressBar());
+			ui.statusBar->addWidget(dem->GetProgressBar(), 1);
+			ui.statusBar->addWidget(dem->GetDurationTimeWidget());
 			dem->CpuRun();
 		}
 		ui.statusBar->removeWidget(dem->GetProgressBar());
+		ui.statusBar->removeWidget(dem->GetDurationTimeWidget());
 	}
-	
-	delete dem;
+	else{
+		delete dem; dem = NULL;
+		return;
+	}
+	connect(gl->getParticle_ptr(), SIGNAL(mySignal()), this, SLOT(mySlot()));
+	disconnect(gl->getParticle_ptr());
+	delete dem; dem = NULL;
 }
 

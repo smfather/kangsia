@@ -23,7 +23,7 @@ namespace parview
 		static void setFrame(unsigned int f) { current_frame = f; }
 		static int getFrame() { return (int)current_frame; }
 		static void upBufferCount() { buffer_count++;  }
-		static void addTimes(double time) { times[buffer_count] = time; }
+		static void addTimes(unsigned int i, float time) { times[i] = time; }
 		static double getTimes() { return times[current_frame]; }
 		static void setTotalFrame(unsigned int tf) { buffer_count = tf; }
 		static void setRealTimeParameter(bool rt) { real_time = rt; }

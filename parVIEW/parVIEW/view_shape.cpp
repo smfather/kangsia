@@ -109,7 +109,7 @@ void shape::setShapeData(QFile& pf, unsigned int fdtype)
 	
 }
 
-void shape::draw()
+void shape::draw(GLenum eMode)
 {
 	glPushMatrix();
 	float* p = NULL;

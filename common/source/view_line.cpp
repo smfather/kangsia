@@ -124,7 +124,7 @@ void line::Click_cancel()
 	isDialogOk = false;
 }
 
-void line::draw()
+void line::draw(GLenum eMode)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glPushMatrix();
@@ -173,6 +173,7 @@ void line::SetDataFromFile(QTextStream& in)
 		>> endPoint[0] >> endPoint[1] >> endPoint[2];
 	roll = (ObjectRoll)_roll;
 	mtype = (material_type)_mtype;
+	material = getMaterialConstant(mtype);
 }
 
 void line::updateDataFromFile(QFile& pf, unsigned int fdtype)

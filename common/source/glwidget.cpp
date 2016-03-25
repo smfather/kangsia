@@ -465,7 +465,7 @@ void GLWidget::paintGL()
 		if (viewOption == 2 && obj->second->Type() != NO_GEOMETRY_TYPE)
 			continue;
 		if(!obj->second->Hide())
-			obj->second->draw();
+			obj->second->draw(GL_RENDER);
 	}
 
 	/*glRotated(xRot / 16.0, 1.0, 0.0, 0.0);
@@ -528,7 +528,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 	// 		return;
 	lastPos = event->pos();
 	if (event->button() == Qt::RightButton){
-		//selection(lastPos.x(), lastPos.y());
+		picking(lastPos.x(), lastPos.y());
 	}
 	if (event->button() == Qt::MiddleButton){
 		onZoom = true;
@@ -627,6 +627,42 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 	// 		setZRotation(zRot + 8 * dx);
 	// 	}
 	// 	lastPos = event->pos();
+}
+
+void GLWidget::picking(int x, int y)
+{
+	static unsigned int aSelectBuffer[SELECT_BUF_SIZE];
+	static unsigned int uiHits;
+	static int aViewport[4];
+
+	glGetIntegerv(GL_VIEWPORT, aViewport);
+
+	glSelectBuffer(SELECT_BUF_SIZE, aSelectBuffer);
+	glRenderMode(GL_SELECT);
+
+	glInitNames();
+	glPushName(0);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+
+	gluPickMatrix((double)x, (double)(aViewport[3] - y), 5.0, 5.0, aViewport);
+
+	gluPerspective(60.0, ratio, 0.01f, 1000.0f);
+	gluLookAt(0, 0, 3, 0, 0, 0, 0, 1, 0);
+	glMatrixMode(GL_MODELVIEW);
+	for (std::map<QString, parview::Object*>::iterator obj = objs.begin(); obj != objs.end(); obj++){
+		if (viewOption == 2 && obj->second->Type() != NO_GEOMETRY_TYPE)
+			continue;
+		if (!obj->second->Hide())
+			obj->second->draw(GL_SELECT);
+	}
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	uiHits = glRenderMode(GL_RENDER);
+	glMatrixMode(GL_MODELVIEW);
+	
 }
 
 void GLWidget::keyPressEvent(QKeyEvent *e)
@@ -1133,8 +1169,10 @@ void GLWidget::makeRect()
 {
 	parview::rectangle *r = new parview::rectangle;
 	if (r->callDialog()){
-		if (r->define())
+		if (r->define()){
 			objs[r->Name()] = r;
+			pickings[r->ID()] = r;
+		}			
 		else
 			delete r;
 	}
@@ -1159,11 +1197,11 @@ void GLWidget::makeParticle()
 {
 	parview::particles *p = new parview::particles;
 	QStringList stList;
-	if (!objs.size())
-	{
-		parview::Object::msgBox("There is no geometry to make the particles.", QMessageBox::Critical);
-		return;
-	}
+// 	if (!objs.size())
+// 	{
+// 		parview::Object::msgBox("There is no geometry to make the particles.", QMessageBox::Critical);
+// 		return;
+// 	}
 	std::map<QString, Object*>::iterator obj = objs.begin();
 	for (; obj != objs.end(); obj++){
 		stList.push_back(obj->second->Name());
@@ -1172,6 +1210,12 @@ void GLWidget::makeParticle()
 	if (p->callDialog()){
 		p->bindingWindowHeight(&wHeight);
 		obj = objs.find(p->BaseGeometryText());
+		if (obj == objs.end()){
+			objs[p->Name()] = p;
+			pview_ptr = p;
+			isSetParticle = true;
+			return;
+		}
 		if (p->define(obj->second)){
 			objs[p->Name()] = p;
 			obj->second->SetHide(true);
@@ -1217,7 +1261,9 @@ void GLWidget::OpenTXT_file(QString& file)
 	in >> ch;
 	if (ch == "PARVIEW_VERSION"){
 		QString ver;
-		in >> ver;
+		in >> ver >> ch;
+		modeler::setModelPath(ch); in >> ch;
+		modeler::setModelName(ch);
 		while (!in.atEnd()){
 			in >> ch;
 			if (ch == "OBJECT"){
@@ -1228,11 +1274,11 @@ void GLWidget::OpenTXT_file(QString& file)
 					l->define();
 					objs[l->Name()] = l;
 				}
-				else if (ch == "PLANE"){
-					parview::plane *p = new parview::plane;
-					p->SetDataFromFile(in);
-					p->define();
-					objs[p->Name()] = p;
+				else if (ch == "RECTANGLE"){
+					parview::rectangle *r = new parview::rectangle;
+					r->SetDataFromFile(in);
+					r->define();
+					objs[r->Name()] = r;
 				}
 				else if (ch == "PARTICLES"){
 					if (objs.find("particles") != objs.end() && isSetParticle){
@@ -1241,10 +1287,10 @@ void GLWidget::OpenTXT_file(QString& file)
 					parview::particles* par = new parview::particles;
 					par->SetDataFromFile(in);
 					par->bindingWindowHeight(&wHeight);
-					std::map<QString, Object*>::iterator obj = objs.find(par->BaseGeometryText());
-					if (par->define(obj->second)){
+				//	std::map<QString, Object*>::iterator obj = objs.find(par->BaseGeometryText());
+					if (par->define()){
 						objs[par->Name()] = par;
-						obj->second->SetHide(true);
+						//obj->second->SetHide(true);
 						pview_ptr = par;
 						isSetParticle = true;
 					}
@@ -1476,7 +1522,7 @@ void GLWidget::OpenFiles(QStringList& fnames)
 bool GLWidget::SaveModel(QFile& file)
 {
 	QTextStream out(&file);
-	out << "PARVIEW_VERSION" << " " << "1.0\n";
+	out << "PARVIEW_VERSION" << " " << "1.0 " << modeler::modelPath() << " " << modeler::modelName() << "\n";
 	if (objs.size())
 	{
 		for (std::map<QString, Object*>::iterator obj = objs.begin(); obj != objs.end(); obj++){
