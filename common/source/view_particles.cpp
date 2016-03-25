@@ -686,24 +686,38 @@ void particles::alloc_buffer_sph(QFile& pf, unsigned int n)
 	delete[] ptype;
 }
 
-void particles::insert_particle_buffer(float* p, unsigned int n)
+void particles::insert_particle_buffer(float* p, float* v, float* f, float* m, unsigned int n, unsigned int part)
 {
-	view_controller::upBufferCount();
-	if(!pos[view_controller::getTotalBuffers()])
-		pos[view_controller::getTotalBuffers()] = new float[np * 4];
-	if(!vel[view_controller::getTotalBuffers()])
-		vel[view_controller::getTotalBuffers()] = new float[np * 4];
-	if(!color[view_controller::getTotalBuffers()])
-		color[view_controller::getTotalBuffers()] = new float[np * 4];
-	memcpy(pos[view_controller::getTotalBuffers()], p, sizeof(float) * n * 4);
+	if (part){
+		if (!pos[view_controller::getTotalBuffers()])
+			pos[view_controller::getTotalBuffers()] = new float[np * 4];
+		if (!vel[view_controller::getTotalBuffers()])
+			vel[view_controller::getTotalBuffers()] = new float[np * 4];
+		if (!color[view_controller::getTotalBuffers()])
+			color[view_controller::getTotalBuffers()] = new float[np * 4];
+		memcpy(pos[view_controller::getTotalBuffers()], p, sizeof(float) * n * 4);
+		memcpy(vel[view_controller::getTotalBuffers()], v, sizeof(float) * n * 4);
 
-	algebra::vector4<float> clr = colors::GetColor(ctype);
-	for (unsigned int i = 0; i < n; i++){
-		color[view_controller::getTotalBuffers()][i * 4 + 0] = clr.x;
-		color[view_controller::getTotalBuffers()][i * 4 + 1] = clr.y;
-		color[view_controller::getTotalBuffers()][i * 4 + 2] = clr.z;
-		color[view_controller::getTotalBuffers()][i * 4 + 3] = clr.w;
+		algebra::vector4<float> clr = colors::GetColor(ctype);
+		for (unsigned int i = 0; i < n; i++){
+			color[view_controller::getTotalBuffers()][i * 4 + 0] = clr.x;
+			color[view_controller::getTotalBuffers()][i * 4 + 1] = clr.y;
+			color[view_controller::getTotalBuffers()][i * 4 + 2] = clr.z;
+			color[view_controller::getTotalBuffers()][i * 4 + 3] = clr.w;
+		}
 	}
+	
+	QString pn;
+	pn.sprintf("%s%s/part%04d.bin", modeler::modelPath().toStdString().c_str(), modeler::modelName().toStdString().c_str(), part);
+	QFile rio(pn);
+	rio.open(QIODevice::WriteOnly);
+	rio.write((char*)&n, sizeof(unsigned int));
+	rio.write((char*)&(view_controller::getTimes(view_controller::getTotalBuffers())), sizeof(float));
+	rio.write((char*)p, sizeof(float) * n * 4);
+	rio.write((char*)v, sizeof(float) * n * 4);
+	rio.write((char*)f, sizeof(float) * n * 3);
+	rio.write((char*)m, sizeof(float) * n * 3);
+	rio.close();
 }
 
 void particles::alloc_buffer(QFile& pf, unsigned int n)
@@ -1066,10 +1080,6 @@ void particles::SaveObject(QTextStream& out)
 	pio.write((char*)vel[0], sizeof(float) * 4 * np);
 	pio.write((char*)particles::color[0], sizeof(float) * 4 * np);
 	pio.close();
-	// 	for (unsigned int i = 0; i < cpProcess.size(); i++){
-// 		out << cpProcess.at(i);
-// 	}
- 	//out << baseGeometry << " " << radius << "\n";
 }
 
 void particles::SetDataFromFile(QTextStream& in)
@@ -1095,27 +1105,4 @@ void particles::SetDataFromFile(QTextStream& in)
 	pout.close();
 	mtype = (material_type)mt;
 	material = getMaterialConstant(mtype);
-// 	if (op == "Create"){
-// 		if (ct == "Manual"){
-// 			baseGeometry = "none";
-// 			Object::name = "particles";
-// 			int mt;
-// 			float p[4] = { 0, };
-// 			float v[4] = { 0, };
-// 			in >> p[3] >> mt >> p[0] >> p[1] >> p[2] >> v[0] >> v[1] >> v[2];
-// 			radius = p[3];
-// 			mtype = (material_type)mt;
-// 			material = getMaterialConstant(mtype);
-// 			AddParticleFromManual(p, v);
-// 			QString comm;
-// 			QTextStream(&comm)
-// 				<< "Create Manual " << radius << " " << (int)mtype << " "
-// 				<< p[0] << " " << p[1] << " " << p[2] << " "
-// 				<< v[0] << " " << v[1] << " " << v[2] << "\n";
-// 			cpProcess.push_back(comm);
-// 		}
-// 		else if (ct == "Geometry"){
-// 			in >> baseGeometry >> radius;
-// 		}
-// 	}
 }

@@ -29,6 +29,7 @@ class Ui_parVIEW
 {
 public:
     QAction *actionChange_Shape;
+	QAction *actionExport;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QScrollArea *GraphicArea;
@@ -47,6 +48,9 @@ public:
         actionChange_Shape = new QAction(parVIEW);
         actionChange_Shape->setObjectName(QStringLiteral("actionChange_Shape"));
         actionChange_Shape->setCheckable(true);
+		actionExport = new QAction(parVIEW);
+		actionExport->setObjectName(QStringLiteral("actionExport"));
+		actionExport->setCheckable(true);
         centralWidget = new QWidget(parVIEW);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -84,7 +88,8 @@ public:
         parVIEW->insertToolBarBreak(secToolBar);
 
         menuBar->addAction(menu->menuAction());
-        menu->addAction(actionChange_Shape);
+		menu->addAction(actionChange_Shape);
+		menu->addAction(actionExport);
 
         retranslateUi(parVIEW);
 
@@ -95,6 +100,7 @@ public:
     {
         parVIEW->setWindowTitle(QApplication::translate("parVIEW", "parVIEW", 0));
         actionChange_Shape->setText(QApplication::translate("parVIEW", "Change Shape", 0));
+		actionExport->setText(QApplication::translate("parVIEW", "Export", 0));
         menu->setTitle(QApplication::translate("parVIEW", "\352\270\260\353\212\245", 0));
         secToolBar->setWindowTitle(QApplication::translate("parVIEW", "toolBar", 0));
     } // retranslateUi

@@ -51,6 +51,12 @@
     <Filter Include="Source Files\CUDA">
       <UniqueIdentifier>{cd114698-4d15-4e3a-a62e-2151a0d2933d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Dialog">
+      <UniqueIdentifier>{762b316c-6fda-4ea1-928c-41e6066384c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Dialog">
+      <UniqueIdentifier>{652e31a0-dd2f-435a-ad95-0a13cfd4a81a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_parview.cpp">
@@ -182,6 +188,15 @@
     <ClCompile Include="..\..\common\source\modeler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ExportDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ExportDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\source\ExportDialog.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\common\resource\parview.ui">
@@ -222,6 +237,9 @@
     </CustomBuild>
     <CustomBuild Include="..\..\common\inc\DEM\DemSimulation.h">
       <Filter>Header Files\Simulation</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\common\inc\ExportDialog.h">
+      <Filter>Header Files\Dialog</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

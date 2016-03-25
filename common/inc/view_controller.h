@@ -24,7 +24,8 @@ namespace parview
 		static int getFrame() { return (int)current_frame; }
 		static void upBufferCount() { buffer_count++;  }
 		static void addTimes(unsigned int i, float time) { times[i] = time; }
-		static double getTimes() { return times[current_frame]; }
+		static float getTimes() { return times[current_frame]; }
+		static float& getTimes(unsigned int i) { return times[i]; }
 		static void setTotalFrame(unsigned int tf) { buffer_count = tf; }
 		static void setRealTimeParameter(bool rt) { real_time = rt; }
 		static bool getRealTimeParameter() { return real_time; }
@@ -34,7 +35,7 @@ namespace parview
 		static unsigned int buffer_count;
 		static bool is_play;
 		static bool real_time;
-		static double *times;
+		static float *times;
 	};
 }
 

@@ -21,6 +21,7 @@ namespace parview
 
 		private slots:
 		void ChangeShape();
+		void Export();
 		void ChangeComboBox(int);
 		void mySlot();
 		void newproj();

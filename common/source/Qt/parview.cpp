@@ -3,6 +3,7 @@
 #include "view_controller.h"
 #include "solveDialog.h"
 #include "contactCoefficientTable.h"
+#include "ExportDialog.h"
 #include <QtWidgets>
 #include <QFileDialog.h>
 
@@ -60,6 +61,7 @@ parVIEW::parVIEW(QWidget *parent)
 	connect(solveProcessAct, SIGNAL(triggered()), this, SLOT(solveProcess()));
 
 	connect(ui.actionChange_Shape, SIGNAL(triggered()), this, SLOT(ChangeShape()));
+	connect(ui.actionExport, SIGNAL(triggered()), this, SLOT(Export()));
 	//dajlkfdjlakfjdlasfsdfsdfds
 
 	ui.mainToolBar->addAction(newAct);
@@ -378,6 +380,12 @@ void parVIEW::ChangeShape()
 
 	gl->ExportForceData();
 	//gl->AddParticles(dir);
+}
+
+void parVIEW::Export()
+{
+	ExportDialog edlg;
+	edlg.callDialog();
 }
 
 void parVIEW::makeCube()

@@ -48,6 +48,7 @@
      <string>기능</string>
     </property>
     <addaction name="actionChange_Shape"/>
+    <addaction name="actionExport"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -83,6 +84,11 @@
    </property>
    <property name="text">
     <string>Change Shape</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>Export</string>
    </property>
   </action>
  </widget>

@@ -6,7 +6,7 @@ using namespace parview;
 unsigned int view_controller::current_frame = 0;
 unsigned int view_controller::buffer_count = 0;
 bool view_controller::is_play = false;
-double *view_controller::times = new double[MAX_FRAME];
+float *view_controller::times = new float[MAX_FRAME];
 bool view_controller::real_time = false;
 
 view_controller::view_controller()

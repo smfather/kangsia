@@ -142,6 +142,7 @@ void DemSimulation::CpuRun()
 	tmer.Start();
 	QString durt_str;
 	float durt = 0;
+	viewPars->insert_particle_buffer(&(pos[0].x), &(vel[0].x), &(force[0].x), &(moment[0].x), viewPars->Np(), part);
 	while (nStep > cStep){
 		times = cStep * dt;
 		TimeStepping<float, true>(pos, vel, acc, omega, alpha, force, moment);
@@ -157,8 +158,9 @@ void DemSimulation::CpuRun()
 			localtime_s(&date, &t);
 			tmer.Stop();
 			durt += tmer.GetElapsedTimeF();
-			viewPars->insert_particle_buffer(&(pos[0].x), viewPars->Np());
+			parview::view_controller::upBufferCount();
 			parview::view_controller::addTimes(parview::view_controller::getTotalBuffers(), times);
+			viewPars->insert_particle_buffer(&(pos[0].x), &(vel[0].x), &(force[0].x), &(moment[0].x), viewPars->Np(), part);
 			durt_str.sprintf("%.4f", durt);
 			durationTime->setText(durt_str);
 			eachStep = 0;
